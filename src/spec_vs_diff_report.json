@@ -1,0 +1,21 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-21T04:20:24.673Z",
+  "summary": "The diff only modifies project_state.json to track the requirement but does not implement any actual data restoration. No backend code changes, database migrations, or data recovery mechanisms are present.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Restore all user-added content (articles, X posts, spotlights, wisdom quotes, resources, and cybercrime articles) that was present before the draft app expired",
+      "reason": "The diff only adds a feature request entry to project_state.json but contains no implementation of actual data restoration logic, database operations, or backend changes to recover the lost content",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "project_state.json"
+  ]
+}

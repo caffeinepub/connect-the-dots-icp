@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Light mode - Futuristic ICP theme */
+        --background: 0.98 0.01 280;
+        --foreground: 0.15 0.02 280;
+        --card: 1 0 0;
+        --card-foreground: 0.15 0.02 280;
+        --popover: 1 0 0;
+        --popover-foreground: 0.15 0.02 280;
+        --primary: 0.55 0.20 280;
+        --primary-foreground: 1 0 0;
+        --secondary: 0.50 0.18 200;
+        --secondary-foreground: 1 0 0;
+        --muted: 0.92 0.01 280;
+        --muted-foreground: 0.50 0.02 280;
+        --accent: 0.60 0.22 200;
+        --accent-foreground: 1 0 0;
+        --destructive: 0.60 0.25 25;
+        --destructive-foreground: 1 0 0;
+        --border: 0.88 0.01 280;
+        --input: 0.88 0.01 280;
+        --input-foreground: 0.10 0.02 280;
+        --ring: 0.55 0.20 280;
+        --chart-1: 0.55 0.20 280;
+        --chart-2: 0.50 0.18 200;
+        --chart-3: 0.60 0.22 320;
+        --chart-4: 0.65 0.18 180;
+        --chart-5: 0.58 0.20 260;
+    }
+
+    .dark {
+        /* Dark mode - Deep space ICP theme with white text for maximum contrast */
+        --background: 0.10 0.02 280;
+        --foreground: 1 0 0;
+        --card: 0.15 0.02 280;
+        --card-foreground: 1 0 0;
+        --popover: 0.12 0.02 280;
+        --popover-foreground: 1 0 0;
+        --primary: 0.65 0.22 280;
+        --primary-foreground: 1 0 0;
+        --secondary: 0.20 0.03 280;
+        --secondary-foreground: 1 0 0;
+        --muted: 0.18 0.02 280;
+        --muted-foreground: 0.85 0.01 280;
+        --accent: 0.55 0.20 200;
+        --accent-foreground: 1 0 0;
+        --destructive: 0.65 0.25 25;
+        --destructive-foreground: 1 0 0;
+        --border: 0.25 0.02 280;
+        --input: 0.20 0.02 280;
+        --input-foreground: 1 0 0;
+        --ring: 0.55 0.20 280;
+        --chart-1: 0.65 0.22 280;
+        --chart-2: 0.55 0.20 200;
+        --chart-3: 0.60 0.22 320;
+        --chart-4: 0.65 0.18 180;
+        --chart-5: 0.58 0.20 260;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+
+    /* Ensure input and textarea text is always visible with white color */
+    input,
+    textarea {
+        color: oklch(var(--input-foreground));
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: oklch(var(--muted-foreground) / 0.6);
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Website/app builder with content upload functionality. User experienced data loss when draft app expired and was redeployed.",
+  "architectural_notes": [
+    "Draft apps expire after a period of inactivity, requiring redeployment",
+    "Redeployment uses existing code but does not restore user data/content"
+  ],
+  "known_issues": [
+    "User content/data is lost when draft app expires and gets redeployed"
+  ],
+  "isFixRequest": false,
+  "existing_features": [],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Restore all user-added content (articles, X posts, spotlights, wisdom quotes, resources, and cybercrime articles) that was present before the draft app expired",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Connect the Dots ICP",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

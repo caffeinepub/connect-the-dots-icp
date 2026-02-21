@@ -1,0 +1,43 @@
+{
+  "kind": "build_request",
+  "title": "Restore user content lost after draft app expiration",
+  "projectName": "Connect the Dots ICP",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Restore all user-added content (articles, X posts, spotlights, wisdom quotes, resources, and cybercrime articles) that was present before the draft app expired",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-12"
+        ],
+        "quotes": [
+          "It's working fine. I just lost my progress from before it expired"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All previously uploaded articles are visible in the Latest Progress tab",
+        "All previously uploaded X posts are visible in the X Posts tab",
+        "All previously added spotlights are visible in the Ecosystem Spotlight tab",
+        "All previously added wisdom quotes are visible in the Investing Wisdom tab",
+        "All previously added resources are visible in the Trusted Resources tab",
+        "All previously added cybercrime articles are visible in the Cybercrime Awareness tab"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify the existing UI components or frontend architecture",
+    "Preserve all existing functionality and user workflows",
+    "Maintain the current backend CRUD API structure"
+  ],
+  "nonGoals": [
+    "Implementing new features beyond data restoration",
+    "Changing the authentication mechanism",
+    "Modifying the visual design or layout"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
