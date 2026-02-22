@@ -1,40 +1,90 @@
 {
   "kind": "build_request",
-  "title": "Restore user content lost after draft app expiration",
-  "projectName": "Connect the Dots ICP",
+  "title": "Fix article upload functionality regression",
+  "projectName": "Connect the Dots.ICP",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Restore all user-added content (articles, X posts, spotlights, wisdom quotes, resources, and cybercrime articles) that was present before the draft app expired",
-      "target": "backend",
+      "id": "REQ-22",
+      "text": "Restore working article upload functionality in the AddArticleDialog component by identifying and fixing the root cause preventing form submission to the backend. The feature worked in a previous version but is now broken. Verify the complete submission flow from form validation through mutation invocation to backend storage.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-12"
+          "msg-user-final"
         ],
         "quotes": [
-          "It's working fine. I just lost my progress from before it expired"
+          "Still not working. You had it working before. Now it is not.",
+          "Please just make it work"
         ]
       },
       "acceptanceCriteria": [
-        "All previously uploaded articles are visible in the Latest Progress tab",
-        "All previously uploaded X posts are visible in the X Posts tab",
-        "All previously added spotlights are visible in the Ecosystem Spotlight tab",
-        "All previously added wisdom quotes are visible in the Investing Wisdom tab",
-        "All previously added resources are visible in the Trusted Resources tab",
-        "All previously added cybercrime articles are visible in the Cybercrime Awareness tab"
+        "Users can successfully submit the article form with title, URL, and thumbnail",
+        "Articles are stored in the backend and appear in the Latest Progress tab immediately after submission",
+        "No console errors occur during the submission process",
+        "Success toast notification appears after successful upload",
+        "Form clears and dialog closes after successful submission"
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Review and fix any issues in the backend addArticle function that may be preventing article data from being stored. Ensure the function correctly receives the Article type with all required fields (title, url, thumbnail, timestamp) and properly stores it in the articles Map.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend addArticle function successfully receives and validates incoming article data",
+        "Articles are stored in the articles Map with correct structure",
+        "Function returns success status to frontend after successful storage",
+        "Stored articles are retrievable via getArticles query"
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "text": "Verify the frontend addArticle mutation in useQueries.ts is correctly invoking the backend actor method with the proper data payload structure. Ensure the mutation hook properly handles the async operation, error states, and query invalidation after successful submission.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Mutation correctly invokes backend_actor.addArticle with proper parameters",
+        "Error handling catches and reports any failures during mutation",
+        "Articles query is invalidated after successful mutation to refresh the list",
+        "Console logs show successful mutation completion"
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "text": "Ensure the actor initialization and readiness checks in AddArticleDialog.tsx are functioning correctly. Verify that the backend actor is available before form submission attempts and that proper error messages are shown if the actor is not ready.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form submission only proceeds when backend actor is confirmed ready",
+        "User receives clear error message if actor is not available",
+        "Console logs indicate actor readiness status before submission",
+        "No submission attempts are made with null or undefined actor"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the existing UI components or frontend architecture",
-    "Preserve all existing functionality and user workflows",
-    "Maintain the current backend CRUD API structure"
+    "Do not change the single-actor backend architecture",
+    "Preserve existing logging statements in AddArticleDialog.tsx and useQueries.ts",
+    "Do not modify immutable frontend paths (useInternetIdentity.ts, useActor.ts, main.tsx, components/ui)",
+    "Maintain compatibility with existing Article data type structure"
   ],
   "nonGoals": [
-    "Implementing new features beyond data restoration",
-    "Changing the authentication mechanism",
-    "Modifying the visual design or layout"
+    "Adding new features or functionality beyond fixing the existing upload",
+    "Redesigning the article upload form UI",
+    "Changing the thumbnail upload mechanism",
+    "Modifying other content type upload dialogs (XPosts, Wisdom, etc.)"
   ],
   "imageRequirements": {
     "required": [],

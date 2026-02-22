@@ -1,14 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Restore all user-added content that was lost after the draft app expiration.
+**Goal:** Fix the broken article upload functionality in the AddArticleDialog component to restore the ability to submit and store articles.
 
 **Planned changes:**
-- Restore previously uploaded articles to the Latest Progress tab
-- Restore previously uploaded X posts to the X Posts tab
-- Restore previously added spotlights to the Ecosystem Spotlight tab
-- Restore previously added wisdom quotes to the Investing Wisdom tab
-- Restore previously added resources to the Trusted Resources tab
-- Restore previously added cybercrime articles to the Cybercrime Awareness tab
+- Debug and fix the article form submission flow from frontend to backend
+- Verify backend addArticle function correctly receives and stores article data
+- Ensure frontend mutation properly invokes backend actor with correct parameters
+- Fix actor initialization and readiness checks before form submission
+- Restore success notifications and form clearing after submission
 
-**User-visible outcome:** All content that was present before the draft app expired is now visible again in their respective tabs, allowing users to continue where they left off.
+**User-visible outcome:** Users can successfully upload articles with title, URL, and thumbnail. Articles appear immediately in the Latest Progress tab after submission with success notifications displayed.

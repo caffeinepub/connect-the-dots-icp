@@ -1,27 +1,288 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Website/app builder with content upload functionality. User experienced data loss when draft app expired and was redeployed.",
+  "projectStateVersion": 13,
+  "summary": "Connect the Dots.ICP: A futuristic, Internet Computer-themed website showcasing real ICP progress often missed by mainstream media. Six-tab resource hub with article links (with thumbnails), X post screenshots, ecosystem spotlights, investing wisdom, trusted resources, and cybercrime awareness. Each section includes add/edit functionality for dynamic content management.",
   "architectural_notes": [
-    "Draft apps expire after a period of inactivity, requiring redeployment",
-    "Redeployment uses existing code but does not restore user data/content"
+    "Six-tab navigation structure for content organization",
+    "Dynamic content management system with add/edit functionality per section",
+    "Article link display with automatic thumbnail extraction",
+    "Image upload and gallery system for X posts and screenshots",
+    "Text content management for quotes and motivational stories",
+    "Futuristic, Internet Computer-branded UI theme (no white backgrounds)",
+    "Menu design: top-right corner button with vertical dropdown for all tabs"
   ],
   "known_issues": [
-    "User content/data is lost when draft app expires and gets redeployed"
+    "Menu tabs not visible or functional",
+    "Article upload functionality broken - form submission not working",
+    "Article content upload regression - functionality was working in previous draft but now broken again"
   ],
-  "isFixRequest": false,
-  "existing_features": [],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-create-a-navigation-system-with-six-tabs-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-and-cybercrime-awareness-navigation-must-be-easily-accessible-from-all-sections-with-a-persistent-menu",
+      "title": "Create a navigation system with six tabs: 'Latest Progress', 'X Posts', 'Ecosystem Spotlight', 'Investing Wisdom', 'Trusted Resources', and 'Cybercrime Awareness'. Navigation must be easily accessible from all sections with a persistent menu.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-1-latest-progress-display-article-links-with-original-thumbnail-photos-include-an-add-article-button-that-allows-posting-new-website-links-with-automatic-thumbnail-extraction",
+      "title": "Implement Tab 1 ('Latest Progress'): Display article links with original thumbnail photos. Include an 'Add Article' button that allows posting new website links with automatic thumbnail extraction.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-2-x-posts-create-a-gallery-for-uploading-and-displaying-screenshots-and-photos-of-x-twitter-posts-include-an-add-post-button-for-uploading-new-images",
+      "title": "Implement Tab 2 ('X Posts'): Create a gallery for uploading and displaying screenshots and photos of X (Twitter) posts. Include an 'Add Post' button for uploading new images.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-3-ecosystem-spotlight-create-a-section-for-ecosystem-spotlight-content-with-an-add-spotlight-button-for-posting-new-content-entries",
+      "title": "Implement Tab 3 ('Ecosystem Spotlight'): Create a section for ecosystem spotlight content with an 'Add Spotlight' button for posting new content entries.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-4-investing-wisdom-create-a-section-for-uploading-and-displaying-motivational-short-stories-and-quotes-include-an-add-wisdom-button-for-posting-new-content",
+      "title": "Implement Tab 4 ('Investing Wisdom'): Create a section for uploading and displaying motivational short stories and quotes. Include an 'Add Wisdom' button for posting new content.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-5-trusted-resources-create-a-resources-page-listing-favorite-and-trusted-people-in-the-icp-ecosystem-include-an-add-resource-button-for-adding-new-people-or-resources",
+      "title": "Implement Tab 5 ('Trusted Resources'): Create a resources page listing favorite and trusted people in the ICP ecosystem. Include an 'Add Resource' button for adding new people or resources.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-tab-6-cybercrime-awareness-display-articles-about-cybercrime-with-original-thumbnail-photos-include-an-add-article-button-for-posting-new-cybercrime-related-links-with-automatic-thumbnail-extraction",
+      "title": "Implement Tab 6 ('Cybercrime Awareness'): Display articles about cybercrime with original thumbnail photos. Include an 'Add Article' button for posting new cybercrime-related links with automatic thumbnail extraction.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-entire-website-with-a-futuristic-internet-computer-theme-use-dark-gradient-or-vibrant-icp-inspired-colors-avoid-basic-white-backgrounds-apply-the-theme-consistently-across-all-tabs-and-components-with-clean-proportional-layouts",
+      "title": "Design the entire website with a futuristic Internet Computer theme. Use dark, gradient, or vibrant ICP-inspired colors (avoid basic white backgrounds). Apply the theme consistently across all tabs and components with clean, proportional layouts.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-text-contrast-in-all-input-fields-textareas-and-form-elements-to-ensure-high-visibility-when-typing-update-color-values-to-provide-sufficient-contrast-against-backgrounds-in-both-light-and-dark-modes",
+      "title": "Improve text contrast in all input fields, textareas, and form elements to ensure high visibility when typing. Update color values to provide sufficient contrast against backgrounds in both light and dark modes.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-navigation-system-with-a-hamburger-menu-button-in-the-top-right-corner-when-clicked-display-all-six-tabs-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-cybercrime-awareness-in-a-vertical-dropdown-list",
+      "title": "Replace the current navigation system with a hamburger menu button in the top-right corner. When clicked, display all six tabs ('Latest Progress', 'X Posts', 'Ecosystem Spotlight', 'Investing Wisdom', 'Trusted Resources', 'Cybercrime Awareness') in a vertical dropdown list.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-six-navigation-tabs-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-cybercrime-awareness-are-functional-and-properly-navigate-to-their-respective-content-sections",
+      "title": "Ensure all six navigation tabs ('Latest Progress', 'X Posts', 'Ecosystem Spotlight', 'Investing Wisdom', 'Trusted Resources', 'Cybercrime Awareness') are functional and properly navigate to their respective content sections.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-all-input-fields-textareas-and-form-elements-across-all-dialog-components-addarticledialog-addcybercrimearticledialog-addresourcedialog-addspotlightdialog-addwisdomdialog-addxpostdialog-to-use-white-text-color-for-maximum-visibility-when-typing-against-dark-backgrounds",
+      "title": "Update all input fields, textareas, and form elements across all dialog components (AddArticleDialog, AddCybercrimeArticleDialog, AddResourceDialog, AddSpotlightDialog, AddWisdomDialog, AddXPostDialog) to use white text color for maximum visibility when typing against dark backgrounds",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-navigationmenu-component-to-render-all-menu-option-text-in-white-color-with-high-contrast-against-the-dark-dropdown-background-so-all-six-navigation-tabs-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-cybercrime-awareness-are-clearly-readable",
+      "title": "Update NavigationMenu component to render all menu option text in white color with high contrast against the dark dropdown background so all six navigation tabs (Latest Progress, X Posts, Ecosystem Spotlight, Investing Wisdom, Trusted Resources, Cybercrime Awareness) are clearly readable",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-all-content-display-sections-latestprogress-xposts-ecosystemspotlight-investingwisdom-trustedresources-cybercrimeawareness-to-ensure-readable-text-content-article-titles-descriptions-quotes-resource-names-post-descriptions-uses-white-text-color-for-maximum-visibility-against-dark-backgrounds",
+      "title": "Update all content display sections (LatestProgress, XPosts, EcosystemSpotlight, InvestingWisdom, TrustedResources, CybercrimeAwareness) to ensure readable text content (article titles, descriptions, quotes, resource names, post descriptions) uses white text color for maximum visibility against dark backgrounds",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-css-color-variables-in-frontend-index-css-and-frontend-src-index-css-to-define-white-text-colors-for-all-text-elements-inputs-and-content-areas-ensuring-consistent-high-contrast-throughout-the-application",
+      "title": "Update the CSS color variables in frontend/index.css and frontend/src/index.css to define white text colors for all text elements, inputs, and content areas, ensuring consistent high contrast throughout the application",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-debug-and-restore-article-upload-functionality-in-addarticledialog-component-to-enable-successful-form-submission-identify-and-fix-any-blocking-issues-preventing-articles-from-being-added-to-the-backend-through-the-addarticle-mutation-hook",
+      "title": "Debug and restore article upload functionality in AddArticleDialog component to enable successful form submission. Identify and fix any blocking issues preventing articles from being added to the backend through the addArticle mutation hook.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-fix-the-article-upload-regression-in-addarticledialog-component-that-prevents-articles-from-being-submitted-to-the-backend-the-functionality-was-working-in-a-previous-version-but-is-now-broken-verify-the-form-submission-flow-mutation-hook-call-actor-readiness-checks-and-error-handling-to-identify-what-changed-and-restore-working-functionality",
+      "title": "Investigate and fix the article upload regression in AddArticleDialog component that prevents articles from being submitted to the backend. The functionality was working in a previous version but is now broken. Verify the form submission flow, mutation hook call, actor readiness checks, and error handling to identify what changed and restore working functionality.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-logging-and-error-reporting-throughout-the-article-upload-flow-in-both-addarticledialog-tsx-and-usequeries-ts-to-identify-where-the-submission-process-is-failing-include-console-logs-for-actor-readiness-mutation-invocation-data-payload-and-any-caught-errors",
+      "title": "Add comprehensive logging and error reporting throughout the article upload flow in both AddArticleDialog.tsx and useQueries.ts to identify where the submission process is failing. Include console logs for actor readiness, mutation invocation, data payload, and any caught errors.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-working-article-upload-functionality-in-the-addarticledialog-component-by-identifying-and-fixing-the-root-cause-preventing-form-submission-to-the-backend-the-feature-worked-in-a-previous-version-but-is-now-broken-verify-the-complete-submission-flow-from-form-validation-through-mutation-invocation-to-backend-storage",
+      "title": "Restore working article upload functionality in the AddArticleDialog component by identifying and fixing the root cause preventing form submission to the backend. The feature worked in a previous version but is now broken. Verify the complete submission flow from form validation through mutation invocation to backend storage.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-frontend-addarticle-mutation-in-usequeries-ts-is-correctly-invoking-the-backend-actor-method-with-the-proper-data-payload-structure-ensure-the-mutation-hook-properly-handles-the-async-operation-error-states-and-query-invalidation-after-successful-submission",
+      "title": "Verify the frontend addArticle mutation in useQueries.ts is correctly invoking the backend actor method with the proper data payload structure. Ensure the mutation hook properly handles the async operation, error states, and query invalidation after successful submission.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-actor-initialization-and-readiness-checks-in-addarticledialog-tsx-are-functioning-correctly-verify-that-the-backend-actor-is-available-before-form-submission-attempts-and-that-proper-error-messages-are-shown-if-the-actor-is-not-ready",
+      "title": "Ensure the actor initialization and readiness checks in AddArticleDialog.tsx are functioning correctly. Verify that the backend actor is available before form submission attempts and that proper error messages are shown if the actor is not ready.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    }
+  ],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Restore all user-added content (articles, X posts, spotlights, wisdom quotes, resources, and cybercrime articles) that was present before the draft app expired",
+      "summary": "Tab 1: Article links with thumbnail photos",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Tab 2: X post screenshots and photos gallery",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Tab 3: Ecosystem spotlight section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Tab 4: General investing wisdom with motivational stories and quotes",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Tab 5: Resources page for trusted ICP ecosystem people",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Tab 6: Cybercrime articles with thumbnail photos",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add/edit buttons for each section to enable dynamic content management",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Futuristic Internet Computer themed design with navigation menu",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Implement backend data models and storage for all six content types: articles with thumbnails, X post images, ecosystem spotlights, investing wisdom entries, trusted resources, and cybercrime articles. Ensure all content persists across canister upgrades.",
       "reqIds": [
-        "REQ-1"
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Improve text contrast for better visibility in input fields and form elements",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Redesign menu as a top-right corner button that opens a vertical dropdown list of all six tabs",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Verify backend addArticle function is correctly receiving and processing article data with thumbnail blobs. Ensure the Article type schema and storage operations are functioning as expected.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Verify the backend addArticle function in main.mo is correctly receiving article data and storing it in the articles array. Ensure the Article type schema matches the data being sent from the frontend and that timestamp-based sorting is functioning properly.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Review and fix any issues in the backend addArticle function that may be preventing article data from being stored. Ensure the function correctly receives the Article type with all required fields (title, url, thumbnail, timestamp) and properly stores it in the articles Map.",
+      "reqIds": [
+        "REQ-23"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Connect the Dots ICP",
+  "gameProjectType": "none",
+  "projectName": "Connect the Dots.ICP",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

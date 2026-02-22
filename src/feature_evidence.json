@@ -1,4 +1,63 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-restore-working-article-upload-functionality-in-the-addarticledialog-component-by-identifying-and-fixing-the-root-cause-preventing-form-submission-to-the-backend-the-feature-worked-in-a-previous-version-but-is-now-broken-verify-the-complete-submission-flow-from-form-validation-through-mutation-invocation-to-backend-storage",
+      "featureTitle": "Restore working article upload functionality in the AddArticleDialog component by identifying and fixing the root cause preventing form submission to the backend. The feature worked in a previous version but is now broken. Verify the complete submission flow from form validation through mutation invocation to backend storage.",
+      "files": [
+        "frontend/src/components/AddArticleDialog.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-the-frontend-addarticle-mutation-in-usequeries-ts-is-correctly-invoking-the-backend-actor-method-with-the-proper-data-payload-structure-ensure-the-mutation-hook-properly-handles-the-async-operation-error-states-and-query-invalidation-after-successful-submission",
+      "featureTitle": "Verify the frontend addArticle mutation in useQueries.ts is correctly invoking the backend actor method with the proper data payload structure. Ensure the mutation hook properly handles the async operation, error states, and query invalidation after successful submission.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-24"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-actor-initialization-and-readiness-checks-in-addarticledialog-tsx-are-functioning-correctly-verify-that-the-backend-actor-is-available-before-form-submission-attempts-and-that-proper-error-messages-are-shown-if-the-actor-is-not-ready",
+      "featureTitle": "Ensure the actor initialization and readiness checks in AddArticleDialog.tsx are functioning correctly. Verify that the backend actor is available before form submission attempts and that proper error messages are shown if the actor is not ready.",
+      "files": [
+        "frontend/src/components/AddArticleDialog.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

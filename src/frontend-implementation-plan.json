@@ -1,6 +1,69 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Frontend Implementation Plan - No Changes Required",
-  "requirements": []
+  "title": "Fix article upload functionality regression",
+  "requirements": [
+    {
+      "id": "REQ-22",
+      "summary": "Restore working article upload functionality in AddArticleDialog by debugging and fixing the complete submission flow from form validation through mutation invocation to backend storage",
+      "acceptanceCriteria": [
+        "Users can successfully submit the article form with title, URL, and thumbnail",
+        "Articles are stored in the backend and appear in the Latest Progress tab immediately after submission",
+        "No console errors occur during the submission process",
+        "Success toast notification appears after successful upload",
+        "Form clears and dialog closes after successful submission"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AddArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Debug and fix the form submission flow by reviewing actor readiness checks, form validation logic, ExternalBlob preparation, mutation invocation sequence, and error handling. Verify all console logging statements are properly placed to trace the submission flow. Ensure the thumbnail file is correctly converted to ExternalBlob before passing to the mutation. Check that the onSuccess callback properly invalidates queries and provides user feedback."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review and fix the addArticle mutation hook to ensure it correctly invokes backend_actor.addArticle with proper parameter structure (title: string, url: string, thumbnail: ExternalBlob). Verify the mutation properly handles the async operation, catches errors with detailed logging, and triggers query invalidation on success. Ensure the mutation return value and error states are properly exposed to the calling component."
+        },
+        {
+          "path": "frontend/src/components/LatestProgress.tsx",
+          "operation": "modify",
+          "description": "Verify that the articles query correctly fetches and displays newly added articles after the mutation succeeds and query invalidation occurs. Ensure the component properly re-renders when new articles are added and the loading state transitions correctly."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Verify the frontend addArticle mutation in useQueries.ts correctly invokes the backend actor method with proper data payload structure and handles async operations, error states, and query invalidation",
+      "acceptanceCriteria": [
+        "Mutation correctly invokes backend_actor.addArticle with proper parameters",
+        "Error handling catches and reports any failures during mutation",
+        "Articles query is invalidated after successful mutation to refresh the list",
+        "Console logs show successful mutation completion"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Ensure the addArticle mutation function signature matches the backend interface expectation: addArticle(title: string, url: string, thumbnail: ExternalBlob): Promise<void>. Verify that the mutation receives these parameters correctly from the calling component and passes them to backend_actor.addArticle without modification. Add or preserve detailed console logging at mutation start, success, and error states. Confirm queryClient.invalidateQueries is called with the correct query key after successful mutation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "summary": "Ensure actor initialization and readiness checks in AddArticleDialog.tsx function correctly, verifying backend actor availability before form submission and showing proper error messages if actor is not ready",
+      "acceptanceCriteria": [
+        "Form submission only proceeds when backend actor is confirmed ready",
+        "User receives clear error message if actor is not available",
+        "Console logs indicate actor readiness status before submission",
+        "No submission attempts are made with null or undefined actor"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AddArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Review the actor readiness validation in the form submission handler. Ensure the backend_actor from useActor hook is properly checked for null/undefined before attempting mutation. Add or verify console logging that shows actor status before submission attempts. If actor is not ready, prevent form submission and display a clear error toast to the user. Verify the useActor hook is called correctly and its return value is properly destructured."
+        }
+      ]
+    }
+  ]
 }
