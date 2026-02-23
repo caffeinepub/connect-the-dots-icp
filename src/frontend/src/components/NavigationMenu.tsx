@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Menu, Newspaper, Twitter, Sparkles, TrendingUp, Users, Shield } from 'lucide-react';
+import { Menu, Newspaper, Twitter, Sparkles, TrendingUp, Users, Shield, Target, BookOpen } from 'lucide-react';
 
 interface NavigationMenuProps {
   activeTab: string;
@@ -14,12 +14,14 @@ interface NavigationMenuProps {
 }
 
 const menuItems = [
+  { id: 'mission', label: 'Overview', icon: Target },
   { id: 'progress', label: 'Latest Progress', icon: Newspaper },
   { id: 'xposts', label: 'X Posts', icon: Twitter },
   { id: 'spotlight', label: 'Ecosystem Spotlight', icon: Sparkles },
   { id: 'wisdom', label: 'Investing Wisdom', icon: TrendingUp },
   { id: 'resources', label: 'Trusted Resources', icon: Users },
   { id: 'cybercrime', label: 'Cybercrime Awareness', icon: Shield },
+  { id: 'additional-resources', label: 'Additional Resources', icon: BookOpen },
 ];
 
 export function NavigationMenu({ activeTab, onTabChange }: NavigationMenuProps) {

@@ -18,6 +18,17 @@ export interface Article {
   'timestamp' : Time,
 }
 export type ExternalBlob = Uint8Array;
+export interface HomePageLink {
+  'id' : string,
+  'url' : string,
+  'title' : string,
+  'thumbnail' : ExternalBlob,
+}
+export interface MissionContent {
+  'title' : string,
+  'description' : string,
+  'images' : Array<ExternalBlob>,
+}
 export interface Resource {
   'id' : string,
   'url' : string,
@@ -28,7 +39,9 @@ export interface Spotlight {
   'id' : string,
   'title' : string,
   'content' : string,
+  'link' : [] | [string],
   'timestamp' : Time,
+  'image' : [] | [ExternalBlob],
 }
 export type Time = bigint;
 export interface Wisdom {
@@ -75,17 +88,53 @@ export interface _SERVICE {
     [string, string, ExternalBlob],
     undefined
   >,
+  'addHomePageLink' : ActorMethod<[string, string, ExternalBlob], undefined>,
   'addResource' : ActorMethod<[string, string, string], undefined>,
-  'addSpotlight' : ActorMethod<[string, string], undefined>,
+  'addSpotlight' : ActorMethod<
+    [string, string, [] | [ExternalBlob], [] | [string]],
+    undefined
+  >,
   'addWisdom' : ActorMethod<[string, string], undefined>,
   'addXPost' : ActorMethod<[string, ExternalBlob], undefined>,
+  'deleteArticle' : ActorMethod<[string], boolean>,
+  'deleteCybercrimeArticle' : ActorMethod<[string], boolean>,
+  'deleteHomePageLink' : ActorMethod<[string], boolean>,
+  'deleteResource' : ActorMethod<[string], boolean>,
+  'deleteSpotlight' : ActorMethod<[string], boolean>,
+  'deleteWisdom' : ActorMethod<[string], boolean>,
+  'deleteXPost' : ActorMethod<[string], boolean>,
   'getAllArticles' : ActorMethod<[], Array<Article>>,
   'getAllCybercrimeArticles' : ActorMethod<[], Array<Article>>,
+  'getAllHomePageLinks' : ActorMethod<[], Array<HomePageLink>>,
   'getAllResources' : ActorMethod<[], Array<Resource>>,
   'getAllSpotlights' : ActorMethod<[], Array<Spotlight>>,
   'getAllWisdom' : ActorMethod<[], Array<Wisdom>>,
   'getAllXPosts' : ActorMethod<[], Array<XPost>>,
   'getArticlesSortedByTitle' : ActorMethod<[], Array<Article>>,
+  'getMissionContent' : ActorMethod<[], [] | [MissionContent]>,
+  'updateArticle' : ActorMethod<
+    [string, string, string, ExternalBlob],
+    boolean
+  >,
+  'updateCybercrimeArticle' : ActorMethod<
+    [string, string, string, ExternalBlob],
+    boolean
+  >,
+  'updateHomePageLink' : ActorMethod<
+    [string, string, string, ExternalBlob],
+    boolean
+  >,
+  'updateMissionContent' : ActorMethod<
+    [string, string, Array<ExternalBlob>],
+    undefined
+  >,
+  'updateResource' : ActorMethod<[string, string, string, string], boolean>,
+  'updateSpotlight' : ActorMethod<
+    [string, string, string, [] | [ExternalBlob], [] | [string]],
+    boolean
+  >,
+  'updateWisdom' : ActorMethod<[string, string, string], boolean>,
+  'updateXPost' : ActorMethod<[string, string, ExternalBlob], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

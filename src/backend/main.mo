@@ -2,11 +2,15 @@ import Map "mo:core/Map";
 import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Iter "mo:core/Iter";
-import Order "mo:core/Order";
 import Time "mo:core/Time";
+import Order "mo:core/Order";
+
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
+import Migration "migration";
 
+
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -18,20 +22,6 @@ actor {
     thumbnail : Storage.ExternalBlob;
   };
 
-  module Article {
-    public func compareByTimestamp(a1 : Article, a2 : Article) : Order.Order {
-      if (a1.timestamp < a2.timestamp) { #less } else if (a1.timestamp > a2.timestamp) {
-        #greater;
-      } else {
-        #equal;
-      };
-    };
-
-    public func compareByTitle(a1 : Article, a2 : Article) : Order.Order {
-      Text.compare(a1.title, a2.title);
-    };
-  };
-
   type XPost = {
     id : Text;
     description : Text;
@@ -39,21 +29,13 @@ actor {
     timestamp : Time.Time;
   };
 
-  module XPost {
-    public func compareByTimestamp(p1 : XPost, p2 : XPost) : Order.Order {
-      if (p1.timestamp < p2.timestamp) { #less } else if (p1.timestamp > p2.timestamp) {
-        #greater;
-      } else {
-        #equal;
-      };
-    };
-  };
-
   type Spotlight = {
     id : Text;
     title : Text;
     content : Text;
+    image : ?Storage.ExternalBlob;
     timestamp : Time.Time;
+    link : ?Text;
   };
 
   type Wisdom = {
@@ -70,21 +52,30 @@ actor {
     url : Text;
   };
 
+  type MissionContent = {
+    title : Text;
+    description : Text;
+    images : [Storage.ExternalBlob];
+  };
+
+  type HomePageLink = {
+    id : Text;
+    title : Text;
+    url : Text;
+    thumbnail : Storage.ExternalBlob;
+  };
+
   let articles = Map.empty<Text, Article>();
   let xPosts = Map.empty<Text, XPost>();
   let spotlights = Map.empty<Text, Spotlight>();
   let wisdomEntries = Map.empty<Text, Wisdom>();
   let resources = Map.empty<Text, Resource>();
   let cybercrimeArticles = Map.empty<Text, Article>();
-
-  func generateIdForTitleOrUrl(title : Text) : Text {
-    let timestampText = Time.now().toText();
-    let sanitized = title.trimEnd(#char '-');
-    sanitized.concat("_".concat(timestampText));
-  };
+  let homePageLinks = Map.empty<Text, HomePageLink>();
+  var missionContent : ?MissionContent = null;
 
   public shared ({ caller }) func addArticle(title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async () {
-    let id = generateIdForTitleOrUrl(title.concat(url));
+    let id = Time.now().toText();
     let article : Article = {
       id;
       title;
@@ -96,15 +87,47 @@ actor {
   };
 
   public query ({ caller }) func getAllArticles() : async [Article] {
-    articles.values().toArray().sort(Article.compareByTimestamp);
+    articles.values().toArray();
   };
 
   public query ({ caller }) func getArticlesSortedByTitle() : async [Article] {
-    articles.values().toArray().sort(Article.compareByTitle);
+    let articlesArray = articles.values().toArray();
+    articlesArray.sort(
+      func(a, b) {
+        Text.compare(a.title, b.title);
+      }
+    );
+  };
+
+  public shared ({ caller }) func updateArticle(id : Text, title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async Bool {
+    switch (articles.get(id)) {
+      case (null) { false };
+      case (?oldArticle) {
+        let updatedArticle : Article = {
+          id = oldArticle.id;
+          title;
+          url;
+          thumbnail;
+          timestamp = oldArticle.timestamp;
+        };
+        articles.add(id, updatedArticle);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteArticle(id : Text) : async Bool {
+    switch (articles.get(id)) {
+      case (null) { false };
+      case (?_) {
+        articles.remove(id);
+        true;
+      };
+    };
   };
 
   public shared ({ caller }) func addXPost(description : Text, image : Storage.ExternalBlob) : async () {
-    let id = generateIdForTitleOrUrl(description);
+    let id = Time.now().toText();
     let xPost : XPost = {
       id;
       description;
@@ -115,15 +138,52 @@ actor {
   };
 
   public query ({ caller }) func getAllXPosts() : async [XPost] {
-    xPosts.values().toArray().sort(XPost.compareByTimestamp);
+    let postsArray = xPosts.values().toArray();
+    postsArray.sort(
+      func(a, b) {
+        if (a.timestamp < b.timestamp) { #less } else if (a.timestamp > b.timestamp) {
+          #greater;
+        } else {
+          #equal;
+        };
+      }
+    );
   };
 
-  public shared ({ caller }) func addSpotlight(title : Text, content : Text) : async () {
-    let id = generateIdForTitleOrUrl(title);
+  public shared ({ caller }) func updateXPost(id : Text, description : Text, image : Storage.ExternalBlob) : async Bool {
+    switch (xPosts.get(id)) {
+      case (null) { false };
+      case (?oldXPost) {
+        let updatedXPost : XPost = {
+          id = oldXPost.id;
+          description;
+          image;
+          timestamp = oldXPost.timestamp;
+        };
+        xPosts.add(id, updatedXPost);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteXPost(id : Text) : async Bool {
+    switch (xPosts.get(id)) {
+      case (null) { false };
+      case (?_) {
+        xPosts.remove(id);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func addSpotlight(title : Text, content : Text, image : ?Storage.ExternalBlob, link : ?Text) : async () {
+    let id = Time.now().toText();
     let spotlight : Spotlight = {
       id;
       title;
       content;
+      image;
+      link;
       timestamp = Time.now();
     };
     spotlights.add(id, spotlight);
@@ -135,8 +195,36 @@ actor {
     array.reverse().map(func((_, s)) { s });
   };
 
+  public shared ({ caller }) func updateSpotlight(id : Text, title : Text, content : Text, image : ?Storage.ExternalBlob, link : ?Text) : async Bool {
+    switch (spotlights.get(id)) {
+      case (null) { false };
+      case (?oldSpotlight) {
+        let updatedSpotlight : Spotlight = {
+          id = oldSpotlight.id;
+          title;
+          content;
+          image;
+          link;
+          timestamp = oldSpotlight.timestamp;
+        };
+        spotlights.add(id, updatedSpotlight);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteSpotlight(id : Text) : async Bool {
+    switch (spotlights.get(id)) {
+      case (null) { false };
+      case (?_) {
+        spotlights.remove(id);
+        true;
+      };
+    };
+  };
+
   public shared ({ caller }) func addWisdom(quote : Text, author : Text) : async () {
-    let id = generateIdForTitleOrUrl(quote.concat(author));
+    let id = Time.now().toText();
     let wisdom : Wisdom = {
       id;
       quote;
@@ -150,8 +238,34 @@ actor {
     wisdomEntries.values().toArray();
   };
 
+  public shared ({ caller }) func updateWisdom(id : Text, quote : Text, author : Text) : async Bool {
+    switch (wisdomEntries.get(id)) {
+      case (null) { false };
+      case (?oldWisdom) {
+        let updatedWisdom : Wisdom = {
+          id = oldWisdom.id;
+          quote;
+          author;
+          timestamp = oldWisdom.timestamp;
+        };
+        wisdomEntries.add(id, updatedWisdom);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteWisdom(id : Text) : async Bool {
+    switch (wisdomEntries.get(id)) {
+      case (null) { false };
+      case (?_) {
+        wisdomEntries.remove(id);
+        true;
+      };
+    };
+  };
+
   public shared ({ caller }) func addResource(name : Text, description : Text, url : Text) : async () {
-    let id = generateIdForTitleOrUrl(name);
+    let id = Time.now().toText();
     let resource : Resource = {
       id;
       name;
@@ -165,8 +279,34 @@ actor {
     resources.values().toArray();
   };
 
+  public shared ({ caller }) func updateResource(id : Text, name : Text, description : Text, url : Text) : async Bool {
+    switch (resources.get(id)) {
+      case (null) { false };
+      case (?_oldResource) {
+        let updatedResource : Resource = {
+          id;
+          name;
+          description;
+          url;
+        };
+        resources.add(id, updatedResource);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteResource(id : Text) : async Bool {
+    switch (resources.get(id)) {
+      case (null) { false };
+      case (?_) {
+        resources.remove(id);
+        true;
+      };
+    };
+  };
+
   public shared ({ caller }) func addCybercrimeArticle(title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async () {
-    let id = generateIdForTitleOrUrl(title.concat(url));
+    let id = Time.now().toText();
     let article : Article = {
       id;
       title;
@@ -179,5 +319,85 @@ actor {
 
   public query ({ caller }) func getAllCybercrimeArticles() : async [Article] {
     cybercrimeArticles.values().toArray();
+  };
+
+  public shared ({ caller }) func updateCybercrimeArticle(id : Text, title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async Bool {
+    switch (cybercrimeArticles.get(id)) {
+      case (null) { false };
+      case (?oldArticle) {
+        let updatedArticle : Article = {
+          id = oldArticle.id;
+          title;
+          url;
+          thumbnail;
+          timestamp = oldArticle.timestamp;
+        };
+        cybercrimeArticles.add(id, updatedArticle);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteCybercrimeArticle(id : Text) : async Bool {
+    switch (cybercrimeArticles.get(id)) {
+      case (null) { false };
+      case (?_) {
+        cybercrimeArticles.remove(id);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func updateMissionContent(title : Text, description : Text, images : [Storage.ExternalBlob]) : async () {
+    missionContent := ?{
+      title;
+      description;
+      images;
+    };
+  };
+
+  public query ({ caller }) func getMissionContent() : async ?MissionContent {
+    missionContent;
+  };
+
+  public shared ({ caller }) func addHomePageLink(title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async () {
+    let id = Time.now().toText();
+    let link : HomePageLink = {
+      id;
+      title;
+      url;
+      thumbnail;
+    };
+    homePageLinks.add(id, link);
+  };
+
+  public shared ({ caller }) func updateHomePageLink(id : Text, title : Text, url : Text, thumbnail : Storage.ExternalBlob) : async Bool {
+    switch (homePageLinks.get(id)) {
+      case (null) { false };
+      case (?oldLink) {
+        let updatedLink : HomePageLink = {
+          id = oldLink.id;
+          title;
+          url;
+          thumbnail;
+        };
+        homePageLinks.add(id, updatedLink);
+        true;
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteHomePageLink(id : Text) : async Bool {
+    switch (homePageLinks.get(id)) {
+      case (null) { false };
+      case (?_) {
+        homePageLinks.remove(id);
+        true;
+      };
+    };
+  };
+
+  public query ({ caller }) func getAllHomePageLinks() : async [HomePageLink] {
+    homePageLinks.values().toArray();
   };
 };

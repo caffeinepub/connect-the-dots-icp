@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useAddSpotlight } from '../hooks/useQueries';
+import { useState, useEffect } from 'react';
+import { useUpdateArticle } from '../hooks/useQueries';
+import { useActor } from '../hooks/useActor';
 import {
   Dialog,
   DialogContent,
@@ -11,112 +12,122 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
+import type { Article } from '../backend';
 
-interface AddSpotlightDialogProps {
+interface EditArticleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  article: Article;
 }
 
-export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogProps) {
+export function EditArticleDialog({ open, onOpenChange, article }: EditArticleDialogProps) {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [link, setLink] = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [url, setUrl] = useState('');
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const addSpotlight = useAddSpotlight();
+  const updateArticleMutation = useUpdateArticle();
+  const { actor } = useActor();
+
+  useEffect(() => {
+    if (open && article) {
+      setTitle(article.title);
+      setUrl(article.url);
+      setThumbnailFile(null);
+      setUploadProgress(0);
+    }
+  }, [open, article]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !content) {
-      toast.error('Please fill in title and content');
+    if (!title || !url) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    if (!actor) {
+      toast.error('Backend connection not ready. Please wait a moment and try again.');
       return;
     }
 
     try {
-      let image: ExternalBlob | null = null;
+      let thumbnail = article.thumbnail;
       
-      if (imageFile) {
-        const arrayBuffer = await imageFile.arrayBuffer();
+      if (thumbnailFile) {
+        const arrayBuffer = await thumbnailFile.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        image = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+        thumbnail = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
           setUploadProgress(percentage);
         });
       }
 
-      await addSpotlight.mutateAsync({ title, content, image, link: link || null });
+      await updateArticleMutation.mutateAsync({ id: article.id, title, url, thumbnail });
       
-      toast.success('Spotlight added successfully!');
+      toast.success('Article updated successfully!');
       setTitle('');
-      setContent('');
-      setLink('');
-      setImageFile(null);
+      setUrl('');
+      setThumbnailFile(null);
       setUploadProgress(0);
       onOpenChange(false);
     } catch (error) {
-      toast.error('Failed to add spotlight');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update article';
+      toast.error(errorMessage);
       console.error(error);
     }
   };
+
+  const isSubmitDisabled = updateArticleMutation.isPending || !actor;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-[#1a0a2e] border-white/10 text-foreground">
         <DialogHeader>
           <DialogTitle className="text-xl bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            Add Ecosystem Spotlight
+            Edit Article
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Highlight an amazing project or person in the ICP ecosystem
+            Update article details
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-white">Title</Label>
+            <Label htmlFor="title" className="text-white">Article Title</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter spotlight title"
+              placeholder="Enter article title"
               className="bg-black/40 border-white/10 text-white placeholder:text-white/50"
+              disabled={updateArticleMutation.isPending}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="content" className="text-white">Content</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write about what makes this spotlight worthy..."
-              className="bg-black/40 border-white/10 min-h-[150px] text-white placeholder:text-white/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="link" className="text-white">Link (Optional)</Label>
+            <Label htmlFor="url" className="text-white">Article URL</Label>
             <Input
-              id="link"
+              id="url"
               type="url"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-              placeholder="https://example.com"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com/article"
               className="bg-black/40 border-white/10 text-white placeholder:text-white/50"
+              disabled={updateArticleMutation.isPending}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image" className="text-white">Image (Optional)</Label>
+            <Label htmlFor="thumbnail" className="text-white">Thumbnail Image (Optional - leave empty to keep current)</Label>
             <Input
-              id="image"
+              id="thumbnail"
               type="file"
               accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
               className="bg-black/40 border-white/10 text-white file:text-white"
+              disabled={updateArticleMutation.isPending}
             />
-            {imageFile && (
-              <p className="text-sm text-white/70">Selected: {imageFile.name}</p>
+            {thumbnailFile && (
+              <p className="text-sm text-white/70">Selected: {thumbnailFile.name}</p>
             )}
           </div>
           {uploadProgress > 0 && uploadProgress < 100 && (
@@ -133,27 +144,31 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
               </div>
             </div>
           )}
+          {!actor && (
+            <p className="text-sm text-yellow-400">Connecting to backend...</p>
+          )}
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               className="border-white/10 text-white"
+              disabled={updateArticleMutation.isPending}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={addSpotlight.isPending}
-              className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white"
+              disabled={isSubmitDisabled}
+              className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white disabled:opacity-50"
             >
-              {addSpotlight.isPending ? (
+              {updateArticleMutation.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
+                  Updating...
                 </>
               ) : (
-                'Add Spotlight'
+                'Update Article'
               )}
             </Button>
           </DialogFooter>

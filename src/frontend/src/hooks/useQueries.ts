@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Article, XPost, Spotlight, Wisdom, Resource } from '../backend';
+import type { Article, XPost, Spotlight, Wisdom, Resource, MissionContent, HomePageLink } from '../backend';
 import { ExternalBlob } from '../backend';
+import { toast } from 'sonner';
 
 // Latest Progress Articles
 export function useGetAllArticles() {
@@ -16,7 +17,7 @@ export function useGetAllArticles() {
         return [];
       }
       const articles = await actor.getAllArticles();
-      console.log('[useGetAllArticles] Fetched articles', { count: articles.length });
+      console.log('[useGetAllArticles] Fetched articles:', articles.length);
       return articles;
     },
     enabled: !!actor && !isFetching,
@@ -29,48 +30,68 @@ export function useAddArticle() {
 
   return useMutation({
     mutationFn: async ({ title, url, thumbnail }: { title: string; url: string; thumbnail: ExternalBlob }) => {
-      console.log('[useAddArticle] Mutation function started', { 
-        timestamp: new Date().toISOString(),
+      console.log('[useAddArticle] Mutation function called', { 
         title, 
         url, 
-        thumbnailType: typeof thumbnail,
-        hasThumbnail: !!thumbnail,
-        actorReady: !!actor
+        actorReady: !!actor,
+        timestamp: new Date().toISOString()
       });
-
+      
       if (!actor) {
-        console.error('[useAddArticle] Actor not available in mutation function');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
+        console.error('[useAddArticle] Actor not available');
+        throw new Error('Backend connection not ready');
       }
 
-      console.log('[useAddArticle] About to call actor.addArticle');
-      try {
-        const result = await actor.addArticle(title, url, thumbnail);
-        console.log('[useAddArticle] actor.addArticle completed successfully', { 
-          result,
-          timestamp: new Date().toISOString() 
-        });
-        return result;
-      } catch (error) {
-        console.error('[useAddArticle] actor.addArticle failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          errorStack: error instanceof Error ? error.stack : undefined,
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+      console.log('[useAddArticle] Calling actor.addArticle with params:', { title, url });
+      const result = await actor.addArticle(title, url, thumbnail);
+      console.log('[useAddArticle] Actor call completed', { result, timestamp: new Date().toISOString() });
+      return result;
     },
     onSuccess: () => {
-      console.log('[useAddArticle] Mutation onSuccess callback - invalidating articles query');
+      console.log('[useAddArticle] Mutation succeeded, invalidating queries', { timestamp: new Date().toISOString() });
       queryClient.invalidateQueries({ queryKey: ['articles'] });
     },
     onError: (error) => {
-      console.error('[useAddArticle] Mutation onError callback', { 
-        error,
-        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      console.error('[useAddArticle] Mutation failed', { 
+        error, 
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       });
-    }
+    },
+  });
+}
+
+export function useUpdateArticle() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, title, url, thumbnail }: { id: string; title: string; url: string; thumbnail: ExternalBlob }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateArticle(id, title, url, thumbnail);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['articles'] });
+    },
+  });
+}
+
+export function useDeleteArticle() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteArticle(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['articles'] });
+      toast.success('Article deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete article');
+    },
   });
 }
 
@@ -94,40 +115,50 @@ export function useAddXPost() {
 
   return useMutation({
     mutationFn: async ({ description, image }: { description: string; image: ExternalBlob }) => {
-      console.log('[useAddXPost] Mutation invoked', { 
-        timestamp: new Date().toISOString(),
-        description, 
-        imageType: typeof image,
-        hasImage: !!image,
-        actorReady: !!actor
-      });
-
-      if (!actor) {
-        console.error('[useAddXPost] Actor not available');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
-      }
-
-      console.log('[useAddXPost] Calling actor.addXPost');
-      try {
-        await actor.addXPost(description, image);
-        console.log('[useAddXPost] Backend call successful', { timestamp: new Date().toISOString() });
-      } catch (error) {
-        console.error('[useAddXPost] Backend call failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addXPost(description, image);
     },
     onSuccess: () => {
-      console.log('[useAddXPost] Mutation successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['xposts'] });
     },
   });
 }
 
-// Ecosystem Spotlights
+export function useUpdateXPost() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, description, image }: { id: string; description: string; image: ExternalBlob }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateXPost(id, description, image);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['xposts'] });
+    },
+  });
+}
+
+export function useDeleteXPost() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteXPost(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['xposts'] });
+      toast.success('Post deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete post');
+    },
+  });
+}
+
+// Ecosystem Spotlight
 export function useGetAllSpotlights() {
   const { actor, isFetching } = useActor();
 
@@ -146,35 +177,46 @@ export function useAddSpotlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ title, content }: { title: string; content: string }) => {
-      console.log('[useAddSpotlight] Mutation invoked', { 
-        timestamp: new Date().toISOString(),
-        title, 
-        content,
-        actorReady: !!actor
-      });
-
-      if (!actor) {
-        console.error('[useAddSpotlight] Actor not available');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
-      }
-
-      console.log('[useAddSpotlight] Calling actor.addSpotlight');
-      try {
-        await actor.addSpotlight(title, content);
-        console.log('[useAddSpotlight] Backend call successful', { timestamp: new Date().toISOString() });
-      } catch (error) {
-        console.error('[useAddSpotlight] Backend call failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+    mutationFn: async ({ title, content, image, link }: { title: string; content: string; image: ExternalBlob | null; link: string | null }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addSpotlight(title, content, image, link);
     },
     onSuccess: () => {
-      console.log('[useAddSpotlight] Mutation successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['spotlights'] });
+    },
+  });
+}
+
+export function useUpdateSpotlight() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, title, content, image, link }: { id: string; title: string; content: string; image: ExternalBlob | null; link: string | null }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateSpotlight(id, title, content, image, link);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spotlights'] });
+    },
+  });
+}
+
+export function useDeleteSpotlight() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteSpotlight(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spotlights'] });
+      toast.success('Spotlight deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete spotlight');
     },
   });
 }
@@ -199,34 +241,45 @@ export function useAddWisdom() {
 
   return useMutation({
     mutationFn: async ({ quote, author }: { quote: string; author: string }) => {
-      console.log('[useAddWisdom] Mutation invoked', { 
-        timestamp: new Date().toISOString(),
-        quote, 
-        author,
-        actorReady: !!actor
-      });
-
-      if (!actor) {
-        console.error('[useAddWisdom] Actor not available');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
-      }
-
-      console.log('[useAddWisdom] Calling actor.addWisdom');
-      try {
-        await actor.addWisdom(quote, author);
-        console.log('[useAddWisdom] Backend call successful', { timestamp: new Date().toISOString() });
-      } catch (error) {
-        console.error('[useAddWisdom] Backend call failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addWisdom(quote, author);
     },
     onSuccess: () => {
-      console.log('[useAddWisdom] Mutation successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['wisdom'] });
+    },
+  });
+}
+
+export function useUpdateWisdom() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, quote, author }: { id: string; quote: string; author: string }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateWisdom(id, quote, author);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wisdom'] });
+    },
+  });
+}
+
+export function useDeleteWisdom() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteWisdom(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wisdom'] });
+      toast.success('Wisdom deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete wisdom');
     },
   });
 }
@@ -251,45 +304,55 @@ export function useAddResource() {
 
   return useMutation({
     mutationFn: async ({ name, description, url }: { name: string; description: string; url: string }) => {
-      console.log('[useAddResource] Mutation invoked', { 
-        timestamp: new Date().toISOString(),
-        name, 
-        description,
-        url,
-        actorReady: !!actor
-      });
-
-      if (!actor) {
-        console.error('[useAddResource] Actor not available');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
-      }
-
-      console.log('[useAddResource] Calling actor.addResource');
-      try {
-        await actor.addResource(name, description, url);
-        console.log('[useAddResource] Backend call successful', { timestamp: new Date().toISOString() });
-      } catch (error) {
-        console.error('[useAddResource] Backend call failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addResource(name, description, url);
     },
     onSuccess: () => {
-      console.log('[useAddResource] Mutation successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['resources'] });
     },
   });
 }
 
-// Cybercrime Articles
+export function useUpdateResource() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, name, description, url }: { id: string; name: string; description: string; url: string }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateResource(id, name, description, url);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resources'] });
+    },
+  });
+}
+
+export function useDeleteResource() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteResource(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resources'] });
+      toast.success('Resource deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete resource');
+    },
+  });
+}
+
+// Cybercrime Awareness
 export function useGetAllCybercrimeArticles() {
   const { actor, isFetching } = useActor();
 
   return useQuery<Article[]>({
-    queryKey: ['cybercrime-articles'],
+    queryKey: ['cybercrimeArticles'],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getAllCybercrimeArticles();
@@ -304,36 +367,137 @@ export function useAddCybercrimeArticle() {
 
   return useMutation({
     mutationFn: async ({ title, url, thumbnail }: { title: string; url: string; thumbnail: ExternalBlob }) => {
-      console.log('[useAddCybercrimeArticle] Mutation invoked', { 
-        timestamp: new Date().toISOString(),
-        title, 
-        url, 
-        thumbnailType: typeof thumbnail,
-        hasThumbnail: !!thumbnail,
-        actorReady: !!actor
-      });
-
-      if (!actor) {
-        console.error('[useAddCybercrimeArticle] Actor not available');
-        throw new Error('Backend connection not ready. Please wait a moment and try again.');
-      }
-
-      console.log('[useAddCybercrimeArticle] Calling actor.addCybercrimeArticle');
-      try {
-        await actor.addCybercrimeArticle(title, url, thumbnail);
-        console.log('[useAddCybercrimeArticle] Backend call successful', { timestamp: new Date().toISOString() });
-      } catch (error) {
-        console.error('[useAddCybercrimeArticle] Backend call failed', { 
-          error,
-          errorMessage: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addCybercrimeArticle(title, url, thumbnail);
     },
     onSuccess: () => {
-      console.log('[useAddCybercrimeArticle] Mutation successful, invalidating queries');
-      queryClient.invalidateQueries({ queryKey: ['cybercrime-articles'] });
+      queryClient.invalidateQueries({ queryKey: ['cybercrimeArticles'] });
+    },
+  });
+}
+
+export function useUpdateCybercrimeArticle() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, title, url, thumbnail }: { id: string; title: string; url: string; thumbnail: ExternalBlob }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateCybercrimeArticle(id, title, url, thumbnail);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cybercrimeArticles'] });
+    },
+  });
+}
+
+export function useDeleteCybercrimeArticle() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteCybercrimeArticle(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cybercrimeArticles'] });
+      toast.success('Article deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete article');
+    },
+  });
+}
+
+// Mission Content
+export function useGetMissionContent() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<MissionContent | null>({
+    queryKey: ['missionContent'],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getMissionContent();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useUpdateMissionContent() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ title, description, images }: { title: string; description: string; images: ExternalBlob[] }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateMissionContent(title, description, images);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missionContent'] });
+    },
+  });
+}
+
+// Home Page Links
+export function useGetHomePageLinks() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<HomePageLink[]>({
+    queryKey: ['homePageLinks'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllHomePageLinks();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddHomePageLink() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ title, url, thumbnail }: { title: string; url: string; thumbnail: ExternalBlob }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.addHomePageLink(title, url, thumbnail);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['homePageLinks'] });
+    },
+  });
+}
+
+export function useUpdateHomePageLink() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, title, url, thumbnail }: { id: string; title: string; url: string; thumbnail: ExternalBlob }) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.updateHomePageLink(id, title, url, thumbnail);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['homePageLinks'] });
+    },
+  });
+}
+
+export function useDeleteHomePageLink() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Backend connection not ready');
+      return actor.deleteHomePageLink(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['homePageLinks'] });
+      toast.success('Link deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete link');
     },
   });
 }

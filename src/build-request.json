@@ -1,90 +1,244 @@
 {
   "kind": "build_request",
-  "title": "Fix article upload functionality regression",
-  "projectName": "Connect the Dots.ICP",
-  "priority": "high",
+  "title": "Add home page links section, rename Mission tab, add delete functionality, and create Additional Resources tab",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-22",
-      "text": "Restore working article upload functionality in the AddArticleDialog component by identifying and fixing the root cause preventing form submission to the backend. The feature worked in a previous version but is now broken. Verify the complete submission flow from form validation through mutation invocation to backend storage.",
+      "id": "REQ-1",
+      "text": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "edit the \"mission\" tab title. Use \"overview\" instead"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigation menu displays 'Overview' instead of 'Mission'",
+        "Tab routing continues to work correctly with the renamed tab",
+        "Active tab highlighting works for the Overview tab"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add an additional tab. Call it \"Additional Resources\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigation menu includes 'Additional Resources' as a new tab option",
+        "Clicking the tab navigates to a new Additional Resources page",
+        "Page follows the existing design system and layout patterns"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add a section on the home page below the mission text for displaying links with thumbnails",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-4"
         ],
         "quotes": [
-          "Still not working. You had it working before. Now it is not.",
-          "Please just make it work"
+          "add a place for links and thumbnails on the home page",
+          "below the text on the home page, let me add links and thumbnails"
         ]
       },
       "acceptanceCriteria": [
-        "Users can successfully submit the article form with title, URL, and thumbnail",
-        "Articles are stored in the backend and appear in the Latest Progress tab immediately after submission",
-        "No console errors occur during the submission process",
-        "Success toast notification appears after successful upload",
-        "Form clears and dialog closes after successful submission"
+        "New section appears below the mission content on the home page",
+        "Section displays links with associated thumbnail images",
+        "Links open in new tabs when clicked",
+        "Thumbnails are displayed in a responsive grid layout"
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Review and fix any issues in the backend addArticle function that may be preventing article data from being stored. Ensure the function correctly receives the Article type with all required fields (title, url, thumbnail, timestamp) and properly stores it in the articles Map.",
+      "id": "REQ-4",
+      "text": "Create backend data model and CRUD operations for home page links with thumbnails",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-4"
+        ],
+        "quotes": [
+          "add a place for links and thumbnails on the home page"
         ]
       },
       "acceptanceCriteria": [
-        "Backend addArticle function successfully receives and validates incoming article data",
-        "Articles are stored in the articles Map with correct structure",
-        "Function returns success status to frontend after successful storage",
-        "Stored articles are retrievable via getArticles query"
+        "New data type defined for home page links with title, URL, and thumbnail fields",
+        "CRUD functions implemented for adding, updating, retrieving, and deleting links",
+        "Thumbnail images stored using blob storage pattern consistent with existing image handling"
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Verify the frontend addArticle mutation in useQueries.ts is correctly invoking the backend actor method with the proper data payload structure. Ensure the mutation hook properly handles the async operation, error states, and query invalidation after successful submission.",
+      "id": "REQ-5",
+      "text": "Add dialog component for creating and editing home page links with thumbnail upload",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-4"
+        ],
+        "quotes": [
+          "let me add links and thumbnails"
         ]
       },
       "acceptanceCriteria": [
-        "Mutation correctly invokes backend_actor.addArticle with proper parameters",
-        "Error handling catches and reports any failures during mutation",
-        "Articles query is invalidated after successful mutation to refresh the list",
-        "Console logs show successful mutation completion"
+        "Dialog allows input of link title and URL",
+        "Thumbnail image upload with progress tracking using ExternalBlob pattern",
+        "Form validation for required fields",
+        "Success and error toast notifications on save"
       ]
     },
     {
-      "id": "REQ-25",
-      "text": "Ensure the actor initialization and readiness checks in AddArticleDialog.tsx are functioning correctly. Verify that the backend actor is available before form submission attempts and that proper error messages are shown if the actor is not ready.",
-      "target": "frontend",
+      "id": "REQ-6",
+      "text": "Add delete button and functionality to all article posts in Latest Progress section",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
         ]
       },
       "acceptanceCriteria": [
-        "Form submission only proceeds when backend actor is confirmed ready",
-        "User receives clear error message if actor is not available",
-        "Console logs indicate actor readiness status before submission",
-        "No submission attempts are made with null or undefined actor"
+        "Delete button visible on each article card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted articles are removed from the list",
+        "Backend deleteArticle function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add delete button and functionality to all X Posts",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each X post card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted posts are removed from the gallery",
+        "Backend deleteXPost function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add delete button and functionality to all Ecosystem Spotlight entries",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each spotlight card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted spotlights are removed from the list",
+        "Backend deleteSpotlight function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Add delete button and functionality to all Investing Wisdom entries",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each wisdom card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted wisdom entries are removed from the list",
+        "Backend deleteWisdom function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Add delete button and functionality to all Trusted Resources entries",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each resource card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted resources are removed from the list",
+        "Backend deleteResource function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Add delete button and functionality to all Cybercrime Awareness articles",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each cybercrime article card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted articles are removed from the list",
+        "Backend deleteCybercrimeArticle function implemented and working"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Add delete functionality for home page links with thumbnails",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Delete button visible on each home page link card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted links are removed from the home page",
+        "Backend delete function for home page links implemented and working"
       ]
     }
   ],
   "constraints": [
-    "Do not change the single-actor backend architecture",
-    "Preserve existing logging statements in AddArticleDialog.tsx and useQueries.ts",
-    "Do not modify immutable frontend paths (useInternetIdentity.ts, useActor.ts, main.tsx, components/ui)",
-    "Maintain compatibility with existing Article data type structure"
+    "All existing content across all sections must be preserved during implementation",
+    "Do not modify existing data structures in ways that would cause data loss",
+    "Maintain consistent delete confirmation UI pattern across all sections"
   ],
   "nonGoals": [
-    "Adding new features or functionality beyond fixing the existing upload",
-    "Redesigning the article upload form UI",
-    "Changing the thumbnail upload mechanism",
-    "Modifying other content type upload dialogs (XPosts, Wisdom, etc.)"
+    "Bulk delete operations",
+    "Trash/recycle bin functionality",
+    "Undo delete functionality"
   ],
   "imageRequirements": {
     "required": [],

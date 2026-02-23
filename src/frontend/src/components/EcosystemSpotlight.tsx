@@ -1,18 +1,39 @@
 import { useState } from 'react';
-import { useGetAllSpotlights } from '../hooks/useQueries';
+import { useGetAllSpotlights, useDeleteSpotlight } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Calendar } from 'lucide-react';
+import { Plus, Calendar, Pencil, ExternalLink, Trash2 } from 'lucide-react';
 import { AddSpotlightDialog } from './AddSpotlightDialog';
+import { EditSpotlightDialog } from './EditSpotlightDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import type { Spotlight } from '../backend';
 
 export function EcosystemSpotlight() {
   const { data: spotlights, isLoading } = useGetAllSpotlights();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingSpotlight, setEditingSpotlight] = useState<Spotlight | null>(null);
+  const [deletingSpotlight, setDeletingSpotlight] = useState<Spotlight | null>(null);
+  const deleteSpotlight = useDeleteSpotlight();
 
   const formatDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) / 1000000);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const handleDelete = async () => {
+    if (!deletingSpotlight) return;
+    await deleteSpotlight.mutateAsync(deletingSpotlight.id);
+    setDeletingSpotlight(null);
   };
 
   return (
@@ -53,19 +74,56 @@ export function EcosystemSpotlight() {
           {spotlights.map((spotlight) => (
             <Card
               key={spotlight.id}
-              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-purple-500/50 transition-all"
+              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-purple-500/50 transition-all group"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-xl text-white">{spotlight.title}</CardTitle>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    {formatDate(spotlight.timestamp)}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="w-4 h-4" />
+                      {formatDate(spotlight.timestamp)}
+                    </div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-white hover:bg-white/10"
+                      onClick={() => setEditingSpotlight(spotlight)}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-white hover:bg-red-600/20"
+                      onClick={() => setDeletingSpotlight(spotlight)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-white whitespace-pre-wrap">{spotlight.content}</p>
+                {spotlight.link && (
+                  <a
+                    href={spotlight.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                  >
+                    Visit Link <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+                {spotlight.image && (
+                  <div className="mt-4">
+                    <img
+                      src={spotlight.image.getDirectURL()}
+                      alt={spotlight.title}
+                      className="w-full max-h-96 object-cover rounded-lg border border-white/10"
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -87,6 +145,36 @@ export function EcosystemSpotlight() {
       )}
 
       <AddSpotlightDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      {editingSpotlight && (
+        <EditSpotlightDialog
+          open={!!editingSpotlight}
+          onOpenChange={(open) => !open && setEditingSpotlight(null)}
+          spotlight={editingSpotlight}
+        />
+      )}
+
+      <AlertDialog open={!!deletingSpotlight} onOpenChange={(open) => !open && setDeletingSpotlight(null)}>
+        <AlertDialogContent className="bg-[#1a0a2e] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Delete Spotlight</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              Are you sure you want to delete "{deletingSpotlight?.title}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-black/40 border-white/10 text-white hover:bg-black/60">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteSpotlight.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleteSpotlight.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -1,14 +1,35 @@
 import { useState } from 'react';
-import { useGetAllWisdom } from '../hooks/useQueries';
+import { useGetAllWisdom, useDeleteWisdom } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Quote } from 'lucide-react';
+import { Plus, Quote, Pencil, Trash2 } from 'lucide-react';
 import { AddWisdomDialog } from './AddWisdomDialog';
+import { EditWisdomDialog } from './EditWisdomDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import type { Wisdom } from '../backend';
 
 export function InvestingWisdom() {
   const { data: wisdom, isLoading } = useGetAllWisdom();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingWisdom, setEditingWisdom] = useState<Wisdom | null>(null);
+  const [deletingWisdom, setDeletingWisdom] = useState<Wisdom | null>(null);
+  const deleteWisdom = useDeleteWisdom();
+
+  const handleDelete = async () => {
+    if (!deletingWisdom) return;
+    await deleteWisdom.mutateAsync(deletingWisdom.id);
+    setDeletingWisdom(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -46,10 +67,28 @@ export function InvestingWisdom() {
           {wisdom.map((item) => (
             <Card
               key={item.id}
-              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-cyan-500/50 transition-all relative overflow-hidden"
+              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-cyan-500/50 transition-all relative overflow-hidden group"
             >
               <div className="absolute top-4 left-4 opacity-10">
                 <Quote className="w-16 h-16 text-purple-400" />
+              </div>
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-white hover:bg-white/10"
+                  onClick={() => setEditingWisdom(item)}
+                >
+                  <Pencil className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-white hover:bg-red-600/20"
+                  onClick={() => setDeletingWisdom(item)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
               <CardContent className="p-6 relative">
                 <blockquote className="text-lg text-white mb-4 italic leading-relaxed">
@@ -79,6 +118,36 @@ export function InvestingWisdom() {
       )}
 
       <AddWisdomDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      {editingWisdom && (
+        <EditWisdomDialog
+          open={!!editingWisdom}
+          onOpenChange={(open) => !open && setEditingWisdom(null)}
+          wisdom={editingWisdom}
+        />
+      )}
+
+      <AlertDialog open={!!deletingWisdom} onOpenChange={(open) => !open && setDeletingWisdom(null)}>
+        <AlertDialogContent className="bg-[#1a0a2e] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Delete Wisdom</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              Are you sure you want to delete this wisdom entry? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-black/40 border-white/10 text-white hover:bg-black/60">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteWisdom.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleteWisdom.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

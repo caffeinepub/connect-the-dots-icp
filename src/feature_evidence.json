@@ -2,10 +2,52 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-restore-working-article-upload-functionality-in-the-addarticledialog-component-by-identifying-and-fixing-the-root-cause-preventing-form-submission-to-the-backend-the-feature-worked-in-a-previous-version-but-is-now-broken-verify-the-complete-submission-flow-from-form-validation-through-mutation-invocation-to-backend-storage",
-      "featureTitle": "Restore working article upload functionality in the AddArticleDialog component by identifying and fixing the root cause preventing form submission to the backend. The feature worked in a previous version but is now broken. Verify the complete submission flow from form validation through mutation invocation to backend storage.",
+      "featureId": "feature-rename-the-mission-navigation-tab-to-overview-throughout-the-application",
+      "featureTitle": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
       "files": [
-        "frontend/src/components/AddArticleDialog.tsx",
+        "frontend/src/App.tsx",
+        "frontend/src/components/NavigationMenu.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-new-additional-resources-tab-to-the-navigation-menu-and-create-corresponding-page-component",
+      "featureTitle": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AdditionalResources.tsx",
+        "frontend/src/components/NavigationMenu.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-section-on-the-home-page-below-the-mission-text-for-displaying-links-with-thumbnails",
+      "featureTitle": "Add a section on the home page below the mission text for displaying links with thumbnails",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -17,14 +59,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-3"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-the-frontend-addarticle-mutation-in-usequeries-ts-is-correctly-invoking-the-backend-actor-method-with-the-proper-data-payload-structure-ensure-the-mutation-hook-properly-handles-the-async-operation-error-states-and-query-invalidation-after-successful-submission",
-      "featureTitle": "Verify the frontend addArticle mutation in useQueries.ts is correctly invoking the backend actor method with the proper data payload structure. Ensure the mutation hook properly handles the async operation, error states, and query invalidation after successful submission.",
+      "featureId": "feature-add-dialog-component-for-creating-and-editing-home-page-links-with-thumbnail-upload",
+      "featureTitle": "Add dialog component for creating and editing home page links with thumbnail upload",
       "files": [
+        "frontend/src/components/AddHomePageLinkDialog.tsx",
+        "frontend/src/components/EditHomePageLinkDialog.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -36,15 +81,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-24"
+        "REQ-5"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-actor-initialization-and-readiness-checks-in-addarticledialog-tsx-are-functioning-correctly-verify-that-the-backend-actor-is-available-before-form-submission-attempts-and-that-proper-error-messages-are-shown-if-the-actor-is-not-ready",
-      "featureTitle": "Ensure the actor initialization and readiness checks in AddArticleDialog.tsx are functioning correctly. Verify that the backend actor is available before form submission attempts and that proper error messages are shown if the actor is not ready.",
+      "featureId": "feature-add-delete-button-and-functionality-to-all-article-posts-in-latest-progress-section",
+      "featureTitle": "Add delete button and functionality to all article posts in Latest Progress section",
       "files": [
-        "frontend/src/components/AddArticleDialog.tsx"
+        "frontend/src/components/LatestProgress.tsx",
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -55,7 +101,127 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-25"
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-button-and-functionality-to-all-x-posts",
+      "featureTitle": "Add delete button and functionality to all X Posts",
+      "files": [
+        "frontend/src/components/XPosts.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-button-and-functionality-to-all-ecosystem-spotlight-entries",
+      "featureTitle": "Add delete button and functionality to all Ecosystem Spotlight entries",
+      "files": [
+        "frontend/src/components/EcosystemSpotlight.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-button-and-functionality-to-all-investing-wisdom-entries",
+      "featureTitle": "Add delete button and functionality to all Investing Wisdom entries",
+      "files": [
+        "frontend/src/components/InvestingWisdom.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-button-and-functionality-to-all-trusted-resources-entries",
+      "featureTitle": "Add delete button and functionality to all Trusted Resources entries",
+      "files": [
+        "frontend/src/components/TrustedResources.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-button-and-functionality-to-all-cybercrime-awareness-articles",
+      "featureTitle": "Add delete button and functionality to all Cybercrime Awareness articles",
+      "files": [
+        "frontend/src/components/CybercrimeAwareness.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-delete-functionality-for-home-page-links-with-thumbnails",
+      "featureTitle": "Add delete functionality for home page links with thumbnails",
+      "files": [
+        "frontend/src/components/HomePageLinks.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
       ],
       "confidence": "high"
     }

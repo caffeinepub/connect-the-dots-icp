@@ -28,6 +28,12 @@ export const Article = IDL.Record({
   'thumbnail' : ExternalBlob,
   'timestamp' : Time,
 });
+export const HomePageLink = IDL.Record({
+  'id' : IDL.Text,
+  'url' : IDL.Text,
+  'title' : IDL.Text,
+  'thumbnail' : ExternalBlob,
+});
 export const Resource = IDL.Record({
   'id' : IDL.Text,
   'url' : IDL.Text,
@@ -38,7 +44,9 @@ export const Spotlight = IDL.Record({
   'id' : IDL.Text,
   'title' : IDL.Text,
   'content' : IDL.Text,
+  'link' : IDL.Opt(IDL.Text),
   'timestamp' : Time,
+  'image' : IDL.Opt(ExternalBlob),
 });
 export const Wisdom = IDL.Record({
   'id' : IDL.Text,
@@ -51,6 +59,11 @@ export const XPost = IDL.Record({
   'description' : IDL.Text,
   'timestamp' : Time,
   'image' : ExternalBlob,
+});
+export const MissionContent = IDL.Record({
+  'title' : IDL.Text,
+  'description' : IDL.Text,
+  'images' : IDL.Vec(ExternalBlob),
 });
 
 export const idlService = IDL.Service({
@@ -82,17 +95,63 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   'addArticle' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
   'addCybercrimeArticle' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
+  'addHomePageLink' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
   'addResource' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
-  'addSpotlight' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'addSpotlight' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'addWisdom' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addXPost' : IDL.Func([IDL.Text, ExternalBlob], [], []),
+  'deleteArticle' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteCybercrimeArticle' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteHomePageLink' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteResource' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteSpotlight' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteWisdom' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteXPost' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
   'getAllCybercrimeArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+  'getAllHomePageLinks' : IDL.Func([], [IDL.Vec(HomePageLink)], ['query']),
   'getAllResources' : IDL.Func([], [IDL.Vec(Resource)], ['query']),
   'getAllSpotlights' : IDL.Func([], [IDL.Vec(Spotlight)], ['query']),
   'getAllWisdom' : IDL.Func([], [IDL.Vec(Wisdom)], ['query']),
   'getAllXPosts' : IDL.Func([], [IDL.Vec(XPost)], ['query']),
   'getArticlesSortedByTitle' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+  'getMissionContent' : IDL.Func([], [IDL.Opt(MissionContent)], ['query']),
+  'updateArticle' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+      [IDL.Bool],
+      [],
+    ),
+  'updateCybercrimeArticle' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+      [IDL.Bool],
+      [],
+    ),
+  'updateHomePageLink' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+      [IDL.Bool],
+      [],
+    ),
+  'updateMissionContent' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Vec(ExternalBlob)],
+      [],
+      [],
+    ),
+  'updateResource' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Bool],
+      [],
+    ),
+  'updateSpotlight' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+      [IDL.Bool],
+      [],
+    ),
+  'updateWisdom' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Bool], []),
+  'updateXPost' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [IDL.Bool], []),
 });
 
 export const idlInitArgs = [];
@@ -118,6 +177,12 @@ export const idlFactory = ({ IDL }) => {
     'thumbnail' : ExternalBlob,
     'timestamp' : Time,
   });
+  const HomePageLink = IDL.Record({
+    'id' : IDL.Text,
+    'url' : IDL.Text,
+    'title' : IDL.Text,
+    'thumbnail' : ExternalBlob,
+  });
   const Resource = IDL.Record({
     'id' : IDL.Text,
     'url' : IDL.Text,
@@ -128,7 +193,9 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Text,
     'title' : IDL.Text,
     'content' : IDL.Text,
+    'link' : IDL.Opt(IDL.Text),
     'timestamp' : Time,
+    'image' : IDL.Opt(ExternalBlob),
   });
   const Wisdom = IDL.Record({
     'id' : IDL.Text,
@@ -141,6 +208,11 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'timestamp' : Time,
     'image' : ExternalBlob,
+  });
+  const MissionContent = IDL.Record({
+    'title' : IDL.Text,
+    'description' : IDL.Text,
+    'images' : IDL.Vec(ExternalBlob),
   });
   
   return IDL.Service({
@@ -176,17 +248,73 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'addHomePageLink' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
     'addResource' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
-    'addSpotlight' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'addSpotlight' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'addWisdom' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addXPost' : IDL.Func([IDL.Text, ExternalBlob], [], []),
+    'deleteArticle' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteCybercrimeArticle' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteHomePageLink' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteResource' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteSpotlight' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteWisdom' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteXPost' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
     'getAllCybercrimeArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+    'getAllHomePageLinks' : IDL.Func([], [IDL.Vec(HomePageLink)], ['query']),
     'getAllResources' : IDL.Func([], [IDL.Vec(Resource)], ['query']),
     'getAllSpotlights' : IDL.Func([], [IDL.Vec(Spotlight)], ['query']),
     'getAllWisdom' : IDL.Func([], [IDL.Vec(Wisdom)], ['query']),
     'getAllXPosts' : IDL.Func([], [IDL.Vec(XPost)], ['query']),
     'getArticlesSortedByTitle' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+    'getMissionContent' : IDL.Func([], [IDL.Opt(MissionContent)], ['query']),
+    'updateArticle' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+        [IDL.Bool],
+        [],
+      ),
+    'updateCybercrimeArticle' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+        [IDL.Bool],
+        [],
+      ),
+    'updateHomePageLink' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, ExternalBlob],
+        [IDL.Bool],
+        [],
+      ),
+    'updateMissionContent' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Vec(ExternalBlob)],
+        [],
+        [],
+      ),
+    'updateResource' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Bool],
+        [],
+      ),
+    'updateSpotlight' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(ExternalBlob),
+          IDL.Opt(IDL.Text),
+        ],
+        [IDL.Bool],
+        [],
+      ),
+    'updateWisdom' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Bool], []),
+    'updateXPost' : IDL.Func(
+        [IDL.Text, IDL.Text, ExternalBlob],
+        [IDL.Bool],
+        [],
+      ),
   });
 };
 

@@ -1,14 +1,35 @@
 import { useState } from 'react';
-import { useGetAllCybercrimeArticles } from '../hooks/useQueries';
+import { useGetAllCybercrimeArticles, useDeleteCybercrimeArticle } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Plus, ExternalLink, AlertTriangle, Pencil, Trash2 } from 'lucide-react';
 import { AddCybercrimeArticleDialog } from './AddCybercrimeArticleDialog';
+import { EditCybercrimeArticleDialog } from './EditCybercrimeArticleDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import type { Article } from '../backend';
 
 export function CybercrimeAwareness() {
   const { data: articles, isLoading } = useGetAllCybercrimeArticles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [deletingArticle, setDeletingArticle] = useState<Article | null>(null);
+  const deleteArticle = useDeleteCybercrimeArticle();
+
+  const handleDelete = async () => {
+    if (!deletingArticle) return;
+    await deleteArticle.mutateAsync(deletingArticle.id);
+    setDeletingArticle(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -63,6 +84,24 @@ export function CybercrimeAwareness() {
                   <div className="absolute top-4 right-4">
                     <AlertTriangle className="w-6 h-6 text-red-400" />
                   </div>
+                  <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 bg-black/60 hover:bg-black/80 text-white"
+                      onClick={() => setEditingArticle(article)}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 bg-black/60 hover:bg-red-600 text-white"
+                      onClick={() => setDeletingArticle(article)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-6">
@@ -98,6 +137,36 @@ export function CybercrimeAwareness() {
       )}
 
       <AddCybercrimeArticleDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      {editingArticle && (
+        <EditCybercrimeArticleDialog
+          open={!!editingArticle}
+          onOpenChange={(open) => !open && setEditingArticle(null)}
+          article={editingArticle}
+        />
+      )}
+
+      <AlertDialog open={!!deletingArticle} onOpenChange={(open) => !open && setDeletingArticle(null)}>
+        <AlertDialogContent className="bg-[#1a0a2e] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Delete Article</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              Are you sure you want to delete "{deletingArticle?.title}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-black/40 border-white/10 text-white hover:bg-black/60">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteArticle.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleteArticle.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

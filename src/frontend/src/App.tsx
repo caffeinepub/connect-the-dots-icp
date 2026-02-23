@@ -5,14 +5,26 @@ import { EcosystemSpotlight } from './components/EcosystemSpotlight';
 import { InvestingWisdom } from './components/InvestingWisdom';
 import { TrustedResources } from './components/TrustedResources';
 import { CybercrimeAwareness } from './components/CybercrimeAwareness';
+import { MissionPage } from './components/MissionPage';
+import { AdditionalResources } from './components/AdditionalResources';
+import { HomePageLinks } from './components/HomePageLinks';
 import { NavigationMenu } from './components/NavigationMenu';
 import { SiInternetcomputer } from 'react-icons/si';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('progress');
+  const [activeTab, setActiveTab] = useState('mission');
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'mission':
+        return (
+          <>
+            <MissionPage />
+            <div className="mt-8">
+              <HomePageLinks />
+            </div>
+          </>
+        );
       case 'progress':
         return <LatestProgress />;
       case 'xposts':
@@ -25,8 +37,17 @@ function App() {
         return <TrustedResources />;
       case 'cybercrime':
         return <CybercrimeAwareness />;
+      case 'additional-resources':
+        return <AdditionalResources />;
       default:
-        return <LatestProgress />;
+        return (
+          <>
+            <MissionPage />
+            <div className="mt-8">
+              <HomePageLinks />
+            </div>
+          </>
+        );
     }
   };
 

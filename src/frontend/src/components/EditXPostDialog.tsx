@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useAddSpotlight } from '../hooks/useQueries';
+import { useState, useEffect } from 'react';
+import { useUpdateXPost } from '../hooks/useQueries';
 import {
   Dialog,
   DialogContent,
@@ -15,30 +15,33 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
+import type { XPost } from '../backend';
 
-interface AddSpotlightDialogProps {
+interface EditXPostDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  post: XPost;
 }
 
-export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogProps) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [link, setLink] = useState('');
+export function EditXPostDialog({ open, onOpenChange, post }: EditXPostDialogProps) {
+  const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const addSpotlight = useAddSpotlight();
+  const updateXPost = useUpdateXPost();
+
+  useEffect(() => {
+    if (open && post) {
+      setDescription(post.description);
+      setImageFile(null);
+      setUploadProgress(0);
+    }
+  }, [open, post]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !content) {
-      toast.error('Please fill in title and content');
-      return;
-    }
-
     try {
-      let image: ExternalBlob | null = null;
+      let image = post.image;
       
       if (imageFile) {
         const arrayBuffer = await imageFile.arrayBuffer();
@@ -48,17 +51,15 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
         });
       }
 
-      await addSpotlight.mutateAsync({ title, content, image, link: link || null });
+      await updateXPost.mutateAsync({ id: post.id, description, image });
       
-      toast.success('Spotlight added successfully!');
-      setTitle('');
-      setContent('');
-      setLink('');
+      toast.success('Post updated successfully!');
+      setDescription('');
       setImageFile(null);
       setUploadProgress(0);
       onOpenChange(false);
     } catch (error) {
-      toast.error('Failed to add spotlight');
+      toast.error('Failed to update post');
       console.error(error);
     }
   };
@@ -68,46 +69,15 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
       <DialogContent className="bg-[#1a0a2e] border-white/10 text-foreground">
         <DialogHeader>
           <DialogTitle className="text-xl bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            Add Ecosystem Spotlight
+            Edit X Post
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Highlight an amazing project or person in the ICP ecosystem
+            Update post screenshot and description
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-white">Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter spotlight title"
-              className="bg-black/40 border-white/10 text-white placeholder:text-white/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="content" className="text-white">Content</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write about what makes this spotlight worthy..."
-              className="bg-black/40 border-white/10 min-h-[150px] text-white placeholder:text-white/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="link" className="text-white">Link (Optional)</Label>
-            <Input
-              id="link"
-              type="url"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-              placeholder="https://example.com"
-              className="bg-black/40 border-white/10 text-white placeholder:text-white/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="image" className="text-white">Image (Optional)</Label>
+            <Label htmlFor="image" className="text-white">Screenshot Image (Optional - leave empty to keep current)</Label>
             <Input
               id="image"
               type="file"
@@ -118,6 +88,16 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
             {imageFile && (
               <p className="text-sm text-white/70">Selected: {imageFile.name}</p>
             )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="description" className="text-white">Description (Optional)</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a description..."
+              className="bg-black/40 border-white/10 min-h-[100px] text-white placeholder:text-white/50"
+            />
           </div>
           {uploadProgress > 0 && uploadProgress < 100 && (
             <div className="space-y-2">
@@ -144,16 +124,16 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
             </Button>
             <Button
               type="submit"
-              disabled={addSpotlight.isPending}
+              disabled={updateXPost.isPending}
               className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white"
             >
-              {addSpotlight.isPending ? (
+              {updateXPost.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
+                  Updating...
                 </>
               ) : (
-                'Add Spotlight'
+                'Update Post'
               )}
             </Button>
           </DialogFooter>

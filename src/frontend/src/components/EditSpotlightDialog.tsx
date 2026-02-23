@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useAddSpotlight } from '../hooks/useQueries';
+import { useState, useEffect } from 'react';
+import { useUpdateSpotlight } from '../hooks/useQueries';
 import {
   Dialog,
   DialogContent,
@@ -15,19 +15,31 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
+import type { Spotlight } from '../backend';
 
-interface AddSpotlightDialogProps {
+interface EditSpotlightDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  spotlight: Spotlight;
 }
 
-export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogProps) {
+export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotlightDialogProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [link, setLink] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const addSpotlight = useAddSpotlight();
+  const updateSpotlight = useUpdateSpotlight();
+
+  useEffect(() => {
+    if (open && spotlight) {
+      setTitle(spotlight.title);
+      setContent(spotlight.content);
+      setLink(spotlight.link || '');
+      setImageFile(null);
+      setUploadProgress(0);
+    }
+  }, [open, spotlight]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +50,7 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
     }
 
     try {
-      let image: ExternalBlob | null = null;
+      let image = spotlight.image || null;
       
       if (imageFile) {
         const arrayBuffer = await imageFile.arrayBuffer();
@@ -48,9 +60,15 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
         });
       }
 
-      await addSpotlight.mutateAsync({ title, content, image, link: link || null });
+      await updateSpotlight.mutateAsync({ 
+        id: spotlight.id, 
+        title, 
+        content, 
+        image,
+        link: link || null
+      });
       
-      toast.success('Spotlight added successfully!');
+      toast.success('Spotlight updated successfully!');
       setTitle('');
       setContent('');
       setLink('');
@@ -58,7 +76,7 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
       setUploadProgress(0);
       onOpenChange(false);
     } catch (error) {
-      toast.error('Failed to add spotlight');
+      toast.error('Failed to update spotlight');
       console.error(error);
     }
   };
@@ -68,10 +86,10 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
       <DialogContent className="bg-[#1a0a2e] border-white/10 text-foreground">
         <DialogHeader>
           <DialogTitle className="text-xl bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            Add Ecosystem Spotlight
+            Edit Ecosystem Spotlight
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Highlight an amazing project or person in the ICP ecosystem
+            Update spotlight details
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,7 +125,7 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image" className="text-white">Image (Optional)</Label>
+            <Label htmlFor="image" className="text-white">Image (Optional - leave empty to keep current)</Label>
             <Input
               id="image"
               type="file"
@@ -144,16 +162,16 @@ export function AddSpotlightDialog({ open, onOpenChange }: AddSpotlightDialogPro
             </Button>
             <Button
               type="submit"
-              disabled={addSpotlight.isPending}
+              disabled={updateSpotlight.isPending}
               className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white"
             >
-              {addSpotlight.isPending ? (
+              {updateSpotlight.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
+                  Updating...
                 </>
               ) : (
-                'Add Spotlight'
+                'Update Spotlight'
               )}
             </Button>
           </DialogFooter>

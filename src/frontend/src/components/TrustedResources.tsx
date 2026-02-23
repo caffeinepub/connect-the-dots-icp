@@ -1,14 +1,35 @@
 import { useState } from 'react';
-import { useGetAllResources } from '../hooks/useQueries';
+import { useGetAllResources, useDeleteResource } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { AddResourceDialog } from './AddResourceDialog';
+import { EditResourceDialog } from './EditResourceDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import type { Resource } from '../backend';
 
 export function TrustedResources() {
   const { data: resources, isLoading } = useGetAllResources();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingResource, setEditingResource] = useState<Resource | null>(null);
+  const [deletingResource, setDeletingResource] = useState<Resource | null>(null);
+  const deleteResource = useDeleteResource();
+
+  const handleDelete = async () => {
+    if (!deletingResource) return;
+    await deleteResource.mutateAsync(deletingResource.id);
+    setDeletingResource(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -48,10 +69,28 @@ export function TrustedResources() {
           {resources.map((resource) => (
             <Card
               key={resource.id}
-              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-purple-500/50 transition-all"
+              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-purple-500/50 transition-all group"
             >
-              <CardHeader>
+              <CardHeader className="flex flex-row items-start justify-between">
                 <CardTitle className="text-lg text-white">{resource.name}</CardTitle>
+                <div className="flex gap-1">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-white hover:bg-white/10 -mt-2 -mr-2 h-8 w-8"
+                    onClick={() => setEditingResource(resource)}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-white hover:bg-red-600/20 -mt-2 -mr-2 h-8 w-8"
+                    onClick={() => setDeletingResource(resource)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-white">{resource.description}</p>
@@ -84,6 +123,36 @@ export function TrustedResources() {
       )}
 
       <AddResourceDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      {editingResource && (
+        <EditResourceDialog
+          open={!!editingResource}
+          onOpenChange={(open) => !open && setEditingResource(null)}
+          resource={editingResource}
+        />
+      )}
+
+      <AlertDialog open={!!deletingResource} onOpenChange={(open) => !open && setDeletingResource(null)}>
+        <AlertDialogContent className="bg-[#1a0a2e] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Delete Resource</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              Are you sure you want to delete "{deletingResource?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-black/40 border-white/10 text-white hover:bg-black/60">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteResource.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleteResource.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

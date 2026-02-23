@@ -1,67 +1,265 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix article upload functionality regression",
+  "title": "Add home page links section, rename Mission tab, add delete functionality, and create Additional Resources tab",
   "requirements": [
     {
-      "id": "REQ-22",
-      "summary": "Restore working article upload functionality in AddArticleDialog by debugging and fixing the complete submission flow from form validation through mutation invocation to backend storage",
+      "id": "REQ-1",
+      "summary": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
       "acceptanceCriteria": [
-        "Users can successfully submit the article form with title, URL, and thumbnail",
-        "Articles are stored in the backend and appear in the Latest Progress tab immediately after submission",
-        "No console errors occur during the submission process",
-        "Success toast notification appears after successful upload",
-        "Form clears and dialog closes after successful submission"
+        "Navigation menu displays 'Overview' instead of 'Mission'",
+        "Tab routing continues to work correctly with the renamed tab",
+        "Active tab highlighting works for the Overview tab"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AddArticleDialog.tsx",
+          "path": "frontend/src/components/NavigationMenu.tsx",
           "operation": "modify",
-          "description": "Debug and fix the form submission flow by reviewing actor readiness checks, form validation logic, ExternalBlob preparation, mutation invocation sequence, and error handling. Verify all console logging statements are properly placed to trace the submission flow. Ensure the thumbnail file is correctly converted to ExternalBlob before passing to the mutation. Check that the onSuccess callback properly invalidates queries and provides user feedback."
+          "description": "Update the navigation menu item label from 'Mission' to 'Overview'. Change the display text while keeping the value 'mission' for routing compatibility."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update any UI labels or comments that reference 'Mission' to use 'Overview' instead. Ensure the tab value 'mission' is retained for routing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
+      "acceptanceCriteria": [
+        "Navigation menu includes 'Additional Resources' as a new tab option",
+        "Clicking the tab navigates to a new Additional Resources page",
+        "Page follows the existing design system and layout patterns"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AdditionalResources.tsx",
+          "operation": "create",
+          "description": "Create a new page component for Additional Resources. Follow the layout pattern used in other pages (TrustedResources, CybercrimeAwareness) with a header section and content area. Include empty state placeholder content for the initial implementation."
+        },
+        {
+          "path": "frontend/src/components/NavigationMenu.tsx",
+          "operation": "modify",
+          "description": "Add a new menu item for 'Additional Resources' with value 'additional-resources'. Position it logically in the menu order, potentially after 'Resources' or at the end."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the new Additional Resources tab into the tab routing logic. Import the AdditionalResources component and add a case for 'additional-resources' in the tab content rendering section."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add a section on the home page below the mission text for displaying links with thumbnails",
+      "acceptanceCriteria": [
+        "New section appears below the mission content on the home page",
+        "Section displays links with associated thumbnail images",
+        "Links open in new tabs when clicked",
+        "Thumbnails are displayed in a responsive grid layout"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "create",
+          "description": "Create a new component to display home page links with thumbnails in a responsive grid. Use the backend getAllHomePageLinks query to fetch data. Display each link as a card with thumbnail image (using getDirectURL() from ExternalBlob), title, and clickable URL that opens in a new tab. Include loading skeletons and empty state. Follow the design pattern from LatestProgress and CybercrimeAwareness components for consistent styling."
         },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Review and fix the addArticle mutation hook to ensure it correctly invokes backend_actor.addArticle with proper parameter structure (title: string, url: string, thumbnail: ExternalBlob). Verify the mutation properly handles the async operation, catches errors with detailed logging, and triggers query invalidation on success. Ensure the mutation return value and error states are properly exposed to the calling component."
+          "description": "Add useGetHomePageLinks query hook that calls backend.getAllHomePageLinks(). Follow the existing query pattern with proper logging and error handling."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Import and render the HomePageLinks component below the MissionPage component when the 'mission' (Overview) tab is active. Position it to appear below the mission text content."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add dialog component for creating and editing home page links with thumbnail upload",
+      "acceptanceCriteria": [
+        "Dialog allows input of link title and URL",
+        "Thumbnail image upload with progress tracking using ExternalBlob pattern",
+        "Form validation for required fields",
+        "Success and error toast notifications on save"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AddHomePageLinkDialog.tsx",
+          "operation": "create",
+          "description": "Create a dialog component for adding home page links. Include form fields for title (text input) and URL (text input with URL validation), plus thumbnail image file upload. Use ExternalBlob.fromBytes() with withUploadProgress() for upload tracking. Follow the pattern from AddArticleDialog.tsx. Display upload percentage during file upload. Verify the blob-storage component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/EditHomePageLinkDialog.tsx",
+          "operation": "create",
+          "description": "Create a dialog component for editing existing home page links. Pre-populate form with current title, URL, and thumbnail. Allow optional thumbnail replacement. Use ExternalBlob upload pattern with progress tracking. Follow the pattern from EditArticleDialog.tsx. Verify the blob-storage component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useAddHomePageLink mutation hook that calls backend.addHomePageLink(title, url, thumbnail). Add useUpdateHomePageLink mutation hook that calls backend.updateHomePageLink(id, title, url, thumbnail). Both should invalidate the home page links query on success and show toast notifications. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "modify",
+          "description": "Wire in the Add and Edit dialogs. Add a button to open AddHomePageLinkDialog. Add edit button/icon on each link card that opens EditHomePageLinkDialog with the selected link data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add delete button and functionality to all article posts in Latest Progress section",
+      "acceptanceCriteria": [
+        "Delete button visible on each article card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted articles are removed from the list",
+        "Backend deleteArticle function implemented and working"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useDeleteArticle mutation hook that calls backend.deleteArticle(id). Invalidate articles query on success and show toast notification. Follow existing mutation patterns with comprehensive logging."
         },
         {
           "path": "frontend/src/components/LatestProgress.tsx",
           "operation": "modify",
-          "description": "Verify that the articles query correctly fetches and displays newly added articles after the mutation succeeds and query invalidation occurs. Ensure the component properly re-renders when new articles are added and the loading state transitions correctly."
+          "description": "Add a delete button to each article card. When clicked, show a confirmation dialog (using AlertDialog from shadcn/ui) asking for confirmation. On confirm, call the useDeleteArticle mutation with the article ID. Show loading state during deletion."
         }
       ]
     },
     {
-      "id": "REQ-24",
-      "summary": "Verify the frontend addArticle mutation in useQueries.ts correctly invokes the backend actor method with proper data payload structure and handles async operations, error states, and query invalidation",
+      "id": "REQ-7",
+      "summary": "Add delete button and functionality to all X Posts",
       "acceptanceCriteria": [
-        "Mutation correctly invokes backend_actor.addArticle with proper parameters",
-        "Error handling catches and reports any failures during mutation",
-        "Articles query is invalidated after successful mutation to refresh the list",
-        "Console logs show successful mutation completion"
+        "Delete button visible on each X post card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted posts are removed from the gallery",
+        "Backend deleteXPost function implemented and working"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Ensure the addArticle mutation function signature matches the backend interface expectation: addArticle(title: string, url: string, thumbnail: ExternalBlob): Promise<void>. Verify that the mutation receives these parameters correctly from the calling component and passes them to backend_actor.addArticle without modification. Add or preserve detailed console logging at mutation start, success, and error states. Confirm queryClient.invalidateQueries is called with the correct query key after successful mutation."
+          "description": "Add useDeleteXPost mutation hook that calls backend.deleteXPost(id). Invalidate X posts query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/XPosts.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each X post card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteXPost mutation with the post ID. Show loading state during deletion."
         }
       ]
     },
     {
-      "id": "REQ-25",
-      "summary": "Ensure actor initialization and readiness checks in AddArticleDialog.tsx function correctly, verifying backend actor availability before form submission and showing proper error messages if actor is not ready",
+      "id": "REQ-8",
+      "summary": "Add delete button and functionality to all Ecosystem Spotlight entries",
       "acceptanceCriteria": [
-        "Form submission only proceeds when backend actor is confirmed ready",
-        "User receives clear error message if actor is not available",
-        "Console logs indicate actor readiness status before submission",
-        "No submission attempts are made with null or undefined actor"
+        "Delete button visible on each spotlight card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted spotlights are removed from the list",
+        "Backend deleteSpotlight function implemented and working"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AddArticleDialog.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Review the actor readiness validation in the form submission handler. Ensure the backend_actor from useActor hook is properly checked for null/undefined before attempting mutation. Add or verify console logging that shows actor status before submission attempts. If actor is not ready, prevent form submission and display a clear error toast to the user. Verify the useActor hook is called correctly and its return value is properly destructured."
+          "description": "Add useDeleteSpotlight mutation hook that calls backend.deleteSpotlight(id). Invalidate spotlights query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/EcosystemSpotlight.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each spotlight card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteSpotlight mutation with the spotlight ID. Show loading state during deletion."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Add delete button and functionality to all Investing Wisdom entries",
+      "acceptanceCriteria": [
+        "Delete button visible on each wisdom card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted wisdom entries are removed from the list",
+        "Backend deleteWisdom function implemented and working"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useDeleteWisdom mutation hook that calls backend.deleteWisdom(id). Invalidate wisdom query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/InvestingWisdom.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each wisdom card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteWisdom mutation with the wisdom ID. Show loading state during deletion."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add delete button and functionality to all Trusted Resources entries",
+      "acceptanceCriteria": [
+        "Delete button visible on each resource card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted resources are removed from the list",
+        "Backend deleteResource function implemented and working"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useDeleteResource mutation hook that calls backend.deleteResource(id). Invalidate resources query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/TrustedResources.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each resource card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteResource mutation with the resource ID. Show loading state during deletion."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Add delete button and functionality to all Cybercrime Awareness articles",
+      "acceptanceCriteria": [
+        "Delete button visible on each cybercrime article card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted articles are removed from the list",
+        "Backend deleteCybercrimeArticle function implemented and working"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useDeleteCybercrimeArticle mutation hook that calls backend.deleteCybercrimeArticle(id). Invalidate cybercrime articles query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/CybercrimeAwareness.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each cybercrime article card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteCybercrimeArticle mutation with the article ID. Show loading state during deletion."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Add delete functionality for home page links with thumbnails",
+      "acceptanceCriteria": [
+        "Delete button visible on each home page link card",
+        "Clicking delete shows confirmation dialog",
+        "Successfully deleted links are removed from the home page",
+        "Backend delete function for home page links implemented and working"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useDeleteHomePageLink mutation hook that calls backend.deleteHomePageLink(id). Invalidate home page links query on success and show toast notification. Follow existing mutation patterns."
+        },
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "modify",
+          "description": "Add a delete button to each home page link card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteHomePageLink mutation with the link ID. Show loading state during deletion."
         }
       ]
     }

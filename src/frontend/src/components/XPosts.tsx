@@ -1,14 +1,35 @@
 import { useState } from 'react';
-import { useGetAllXPosts } from '../hooks/useQueries';
+import { useGetAllXPosts, useDeleteXPost } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { AddXPostDialog } from './AddXPostDialog';
+import { EditXPostDialog } from './EditXPostDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import type { XPost } from '../backend';
 
 export function XPosts() {
   const { data: posts, isLoading } = useGetAllXPosts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<XPost | null>(null);
+  const [deletingPost, setDeletingPost] = useState<XPost | null>(null);
+  const deletePost = useDeleteXPost();
+
+  const handleDelete = async () => {
+    if (!deletingPost) return;
+    await deletePost.mutateAsync(deletingPost.id);
+    setDeletingPost(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -54,6 +75,24 @@ export function XPosts() {
                     alt={post.description || 'X Post'}
                     className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
                   />
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 bg-black/60 hover:bg-black/80 text-white"
+                      onClick={() => setEditingPost(post)}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 bg-black/60 hover:bg-red-600 text-white"
+                      onClick={() => setDeletingPost(post)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
                 {post.description && (
                   <div className="p-4">
@@ -81,6 +120,36 @@ export function XPosts() {
       )}
 
       <AddXPostDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      {editingPost && (
+        <EditXPostDialog
+          open={!!editingPost}
+          onOpenChange={(open) => !open && setEditingPost(null)}
+          post={editingPost}
+        />
+      )}
+
+      <AlertDialog open={!!deletingPost} onOpenChange={(open) => !open && setDeletingPost(null)}>
+        <AlertDialogContent className="bg-[#1a0a2e] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Delete Post</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              Are you sure you want to delete this post? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-black/40 border-white/10 text-white hover:bg-black/60">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deletePost.isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deletePost.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
