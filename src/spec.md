@@ -1,20 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Rename Mission tab to Overview, add Additional Resources tab, create home page links section with thumbnails, and implement delete functionality across all content types.
+**Goal:** Redeploy the Connect the Dots application to production while preserving all existing backend data and Version 12 functionality.
 
 **Planned changes:**
-- Rename "Mission" navigation tab to "Overview"
-- Add new "Additional Resources" tab and page
-- Add links section with thumbnails below mission text on home page
-- Create backend data model and CRUD operations for home page links
-- Add dialog for creating/editing home page links with thumbnail upload
-- Add delete buttons with confirmation dialogs to all articles (Latest Progress)
-- Add delete buttons with confirmation dialogs to all X Posts
-- Add delete buttons with confirmation dialogs to all Ecosystem Spotlight entries
-- Add delete buttons with confirmation dialogs to all Investing Wisdom entries
-- Add delete buttons with confirmation dialogs to all Trusted Resources entries
-- Add delete buttons with confirmation dialogs to all Cybercrime Awareness articles
-- Add delete buttons with confirmation dialogs to all home page links
+- Redeploy current application (Version 12) to production environment
+- Ensure all existing backend data is preserved during deployment (articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, mission content)
+- Verify Additional Resources tab, delete buttons, and home page links with thumbnails remain functional after redeployment
 
-**User-visible outcome:** Users can navigate to Overview (formerly Mission) and a new Additional Resources tab. On the home page, users can add links with thumbnail images below the mission text. Users can delete any content item (posts, spotlights, resources, articles, links) using delete buttons that appear on each card with confirmation dialogs.
+**User-visible outcome:** The application will be live in production with all existing content intact and all Version 12 features (Additional Resources tab, delete buttons across content types, home page links with thumbnails) working as expected.

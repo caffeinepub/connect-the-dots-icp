@@ -1,137 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Website project with home page, multiple tabs (Overview, Additional Resources), and content management features",
-  "architectural_notes": [
-    "Content persistence required across feature implementations"
-  ],
+  "summary": "Redeployment of app with content preservation",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
-  "existing_features": [
-    {
-      "id": "feature-rename-the-mission-navigation-tab-to-overview-throughout-the-application",
-      "title": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-new-additional-resources-tab-to-the-navigation-menu-and-create-corresponding-page-component",
-      "title": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-section-on-the-home-page-below-the-mission-text-for-displaying-links-with-thumbnails",
-      "title": "Add a section on the home page below the mission text for displaying links with thumbnails",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-dialog-component-for-creating-and-editing-home-page-links-with-thumbnail-upload",
-      "title": "Add dialog component for creating and editing home page links with thumbnail upload",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-article-posts-in-latest-progress-section",
-      "title": "Add delete button and functionality to all article posts in Latest Progress section",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-x-posts",
-      "title": "Add delete button and functionality to all X Posts",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-ecosystem-spotlight-entries",
-      "title": "Add delete button and functionality to all Ecosystem Spotlight entries",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-investing-wisdom-entries",
-      "title": "Add delete button and functionality to all Investing Wisdom entries",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-trusted-resources-entries",
-      "title": "Add delete button and functionality to all Trusted Resources entries",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-button-and-functionality-to-all-cybercrime-awareness-articles",
-      "title": "Add delete button and functionality to all Cybercrime Awareness articles",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-delete-functionality-for-home-page-links-with-thumbnails",
-      "title": "Add delete functionality for home page links with thumbnails",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    }
-  ],
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add links and thumbnails section on home page below text",
-      "reqIds": [],
+      "summary": "Redeploy the current application (Version 12) to production while ensuring all existing backend data is preserved, including articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Rename 'mission' tab to 'overview'",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Add delete button for all posts (posts, pictures, links, etc)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add new 'Additional Resources' tab",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Create backend data model and CRUD operations for home page links with thumbnails",
+      "summary": "Verify that the Additional Resources tab, delete buttons across all content types, and home page links with thumbnails (features from Version 12) remain functional after redeployment",
       "reqIds": [
-        "REQ-4"
+        "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Add home page links section, rename Mission tab, add delete functionality, and create Additional Resources tab",
+  "projectName": "Connect the Dots",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

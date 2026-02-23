@@ -1,244 +1,64 @@
 {
   "kind": "build_request",
-  "title": "Add home page links section, rename Mission tab, add delete functionality, and create Additional Resources tab",
+  "title": "Redeploy application with existing content preservation",
+  "projectName": "Connect the Dots",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
-      "target": "frontend",
+      "text": "Redeploy the current application (Version 12) to production while ensuring all existing backend data is preserved, including articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-11",
+          "msg-12"
         ],
         "quotes": [
-          "edit the \"mission\" tab title. Use \"overview\" instead"
+          "3 please. Will save me time having to re-enter all the info"
         ]
       },
       "acceptanceCriteria": [
-        "Navigation menu displays 'Overview' instead of 'Mission'",
-        "Tab routing continues to work correctly with the renamed tab",
-        "Active tab highlighting works for the Overview tab"
+        "Application successfully deploys to production",
+        "All existing articles remain accessible after deployment",
+        "All X posts and their images are preserved",
+        "All spotlight entries with their content and images remain intact",
+        "All wisdom entries are preserved",
+        "All trusted resources remain accessible",
+        "All cybercrime articles with thumbnails are preserved",
+        "All home page links with thumbnails remain functional",
+        "Mission content including title, description, and images is preserved",
+        "No data loss occurs during the deployment process"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
+      "text": "Verify that the Additional Resources tab, delete buttons across all content types, and home page links with thumbnails (features from Version 12) remain functional after redeployment",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add an additional tab. Call it \"Additional Resources\""
+          "msg-11",
+          "msg-12"
         ]
       },
       "acceptanceCriteria": [
-        "Navigation menu includes 'Additional Resources' as a new tab option",
-        "Clicking the tab navigates to a new Additional Resources page",
-        "Page follows the existing design system and layout patterns"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Add a section on the home page below the mission text for displaying links with thumbnails",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a place for links and thumbnails on the home page",
-          "below the text on the home page, let me add links and thumbnails"
-        ]
-      },
-      "acceptanceCriteria": [
-        "New section appears below the mission content on the home page",
-        "Section displays links with associated thumbnail images",
-        "Links open in new tabs when clicked",
-        "Thumbnails are displayed in a responsive grid layout"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Create backend data model and CRUD operations for home page links with thumbnails",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a place for links and thumbnails on the home page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "New data type defined for home page links with title, URL, and thumbnail fields",
-        "CRUD functions implemented for adding, updating, retrieving, and deleting links",
-        "Thumbnail images stored using blob storage pattern consistent with existing image handling"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add dialog component for creating and editing home page links with thumbnail upload",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "let me add links and thumbnails"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dialog allows input of link title and URL",
-        "Thumbnail image upload with progress tracking using ExternalBlob pattern",
-        "Form validation for required fields",
-        "Success and error toast notifications on save"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add delete button and functionality to all article posts in Latest Progress section",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each article card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted articles are removed from the list",
-        "Backend deleteArticle function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Add delete button and functionality to all X Posts",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each X post card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted posts are removed from the gallery",
-        "Backend deleteXPost function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Add delete button and functionality to all Ecosystem Spotlight entries",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each spotlight card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted spotlights are removed from the list",
-        "Backend deleteSpotlight function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Add delete button and functionality to all Investing Wisdom entries",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each wisdom card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted wisdom entries are removed from the list",
-        "Backend deleteWisdom function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Add delete button and functionality to all Trusted Resources entries",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each resource card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted resources are removed from the list",
-        "Backend deleteResource function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Add delete button and functionality to all Cybercrime Awareness articles",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each cybercrime article card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted articles are removed from the list",
-        "Backend deleteCybercrimeArticle function implemented and working"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Add delete functionality for home page links with thumbnails",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add a \"delete\" button everywhere there's a post. Want to be able to delete posts, pictures, links, etc if needed"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Delete button visible on each home page link card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted links are removed from the home page",
-        "Backend delete function for home page links implemented and working"
+        "Additional Resources tab is accessible in the navigation",
+        "Delete buttons appear on all content types (articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links)",
+        "Delete confirmation dialogs function correctly",
+        "Home page links section displays with thumbnails",
+        "All CRUD operations work as expected post-deployment"
       ]
     }
   ],
   "constraints": [
-    "All existing content across all sections must be preserved during implementation",
-    "Do not modify existing data structures in ways that would cause data loss",
-    "Maintain consistent delete confirmation UI pattern across all sections"
+    "Must preserve all existing backend data during redeployment",
+    "Must maintain the current Version 12 functionality including Additional Resources tab and delete buttons",
+    "Must use the existing migration.mo to ensure state preservation"
   ],
   "nonGoals": [
-    "Bulk delete operations",
-    "Trash/recycle bin functionality",
-    "Undo delete functionality"
+    "Adding new features beyond Version 12",
+    "Modifying the data schema or backend structure",
+    "Changing the UI or design elements",
+    "Rolling back to earlier versions"
   ],
   "imageRequirements": {
     "required": [],

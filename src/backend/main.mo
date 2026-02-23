@@ -4,12 +4,12 @@ import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import Time "mo:core/Time";
 import Order "mo:core/Order";
+import Migration "migration";
 
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
-import Migration "migration";
 
-
+// This is a pure data migration redeployment to maintain persistent data across version upgrades
 (with migration = Migration.run)
 actor {
   include MixinStorage();

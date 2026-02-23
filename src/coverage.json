@@ -1,172 +1,65 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T21:41:44.313Z",
+  "generatedAt": "2026-02-23T02:29:09.621Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 12,
-    "implemented": 11,
+    "total": 2,
+    "implemented": 0,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
-        "status": "implemented",
+        "summary": "Redeploy the current application (Version 12) to production while ensuring all existing backend data is preserved, including articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/components/NavigationMenu.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/NavigationMenu.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-10",
-        "summary": "Add delete button and functionality to all Trusted Resources entries",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/TrustedResources.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/TrustedResources.tsx"
-        ]
-      },
-      {
-        "id": "REQ-11",
-        "summary": "Add delete button and functionality to all Cybercrime Awareness articles",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/CybercrimeAwareness.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/CybercrimeAwareness.tsx"
-        ]
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Add delete functionality for home page links with thumbnails",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/HomePageLinks.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/HomePageLinks.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AdditionalResources.tsx",
-          "frontend/src/components/NavigationMenu.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AdditionalResources.tsx",
-          "frontend/src/components/NavigationMenu.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Add a section on the home page below the mission text for displaying links with thumbnails",
-        "status": "implemented",
-        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/LatestProgress.tsx",
+          "frontend/src/components/XPosts.tsx",
+          "frontend/src/components/EcosystemSpotlight.tsx",
+          "frontend/src/components/InvestingWisdom.tsx",
+          "frontend/src/components/TrustedResources.tsx",
+          "frontend/src/components/CybercrimeAwareness.tsx",
           "frontend/src/components/HomePageLinks.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/MissionPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
-        "matchedFiles": [
-          "frontend/src/components/HomePageLinks.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Create backend data model and CRUD operations for home page links with thumbnails",
-        "status": "unknown",
-        "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-5",
-        "summary": "Add dialog component for creating and editing home page links with thumbnail upload",
-        "status": "implemented",
+        "id": "REQ-2",
+        "summary": "Verify that the Additional Resources tab, delete buttons across all content types, and home page links with thumbnails (features from Version 12) remain functional after redeployment",
+        "status": "missing",
         "plannedFiles": [
+          "frontend/src/components/NavigationMenu.tsx",
+          "frontend/src/components/AdditionalResources.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/components/LatestProgress.tsx",
+          "frontend/src/components/XPosts.tsx",
+          "frontend/src/components/EcosystemSpotlight.tsx",
+          "frontend/src/components/InvestingWisdom.tsx",
+          "frontend/src/components/TrustedResources.tsx",
+          "frontend/src/components/CybercrimeAwareness.tsx",
+          "frontend/src/components/HomePageLinks.tsx",
+          "frontend/src/components/AddArticleDialog.tsx",
+          "frontend/src/components/EditArticleDialog.tsx",
+          "frontend/src/components/AddXPostDialog.tsx",
+          "frontend/src/components/EditXPostDialog.tsx",
+          "frontend/src/components/AddSpotlightDialog.tsx",
+          "frontend/src/components/EditSpotlightDialog.tsx",
+          "frontend/src/components/AddWisdomDialog.tsx",
+          "frontend/src/components/EditWisdomDialog.tsx",
+          "frontend/src/components/AddResourceDialog.tsx",
+          "frontend/src/components/EditResourceDialog.tsx",
+          "frontend/src/components/AddCybercrimeArticleDialog.tsx",
+          "frontend/src/components/EditCybercrimeArticleDialog.tsx",
           "frontend/src/components/AddHomePageLinkDialog.tsx",
           "frontend/src/components/EditHomePageLinkDialog.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/HomePageLinks.tsx"
+          "frontend/src/components/EditMissionDialog.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/components/AddHomePageLinkDialog.tsx",
-          "frontend/src/components/EditHomePageLinkDialog.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/HomePageLinks.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add delete button and functionality to all article posts in Latest Progress section",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/LatestProgress.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/LatestProgress.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Add delete button and functionality to all X Posts",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/XPosts.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/XPosts.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Add delete button and functionality to all Ecosystem Spotlight entries",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/EcosystemSpotlight.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/EcosystemSpotlight.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Add delete button and functionality to all Investing Wisdom entries",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/InvestingWisdom.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/InvestingWisdom.tsx"
-        ]
+        "matchedFiles": []
       }
     ]
   },
@@ -175,25 +68,7 @@
     "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/AddHomePageLinkDialog.tsx",
-    "frontend/src/components/AdditionalResources.tsx",
-    "frontend/src/components/CybercrimeAwareness.tsx",
-    "frontend/src/components/EcosystemSpotlight.tsx",
-    "frontend/src/components/EditHomePageLinkDialog.tsx",
-    "frontend/src/components/HomePageLinks.tsx",
-    "frontend/src/components/InvestingWisdom.tsx",
-    "frontend/src/components/LatestProgress.tsx",
-    "frontend/src/components/NavigationMenu.tsx",
-    "frontend/src/components/TrustedResources.tsx",
-    "frontend/src/components/XPosts.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,265 +1,211 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add home page links section, rename Mission tab, add delete functionality, and create Additional Resources tab",
+  "title": "Redeploy Application with Data Preservation",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Rename the 'Mission' navigation tab to 'Overview' throughout the application",
+      "summary": "Redeploy application to production preserving all backend data including articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links, and mission content",
       "acceptanceCriteria": [
-        "Navigation menu displays 'Overview' instead of 'Mission'",
-        "Tab routing continues to work correctly with the renamed tab",
-        "Active tab highlighting works for the Overview tab"
+        "Application successfully deploys to production",
+        "All existing articles remain accessible after deployment",
+        "All X posts and their images are preserved",
+        "All spotlight entries with their content and images remain intact",
+        "All wisdom entries are preserved",
+        "All trusted resources remain accessible",
+        "All cybercrime articles with thumbnails are preserved",
+        "All home page links with thumbnails remain functional",
+        "Mission content including title, description, and images is preserved",
+        "No data loss occurs during the deployment process"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/NavigationMenu.tsx",
-          "operation": "modify",
-          "description": "Update the navigation menu item label from 'Mission' to 'Overview'. Change the display text while keeping the value 'mission' for routing compatibility."
-        },
-        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update any UI labels or comments that reference 'Mission' to use 'Overview' instead. Ensure the tab value 'mission' is retained for routing."
+          "description": "Verify all tab navigation and content sections remain wired correctly for Mission/Overview with HomePageLinks, Progress, XPosts, Spotlight, Wisdom, Resources, Cybercrime, and Additional Resources tabs"
+        },
+        {
+          "path": "frontend/src/components/LatestProgress.tsx",
+          "operation": "modify",
+          "description": "Verify article fetching, display, and CRUD operations work correctly post-deployment using getAllArticles backend capability"
+        },
+        {
+          "path": "frontend/src/components/XPosts.tsx",
+          "operation": "modify",
+          "description": "Verify X post fetching and image display work correctly post-deployment using getAllXPosts backend capability with ExternalBlob images"
+        },
+        {
+          "path": "frontend/src/components/EcosystemSpotlight.tsx",
+          "operation": "modify",
+          "description": "Verify spotlight entries with content and optional images are fetched and displayed correctly using getAllSpotlights backend capability"
+        },
+        {
+          "path": "frontend/src/components/InvestingWisdom.tsx",
+          "operation": "modify",
+          "description": "Verify wisdom entries are fetched and displayed correctly using getAllWisdom backend capability"
+        },
+        {
+          "path": "frontend/src/components/TrustedResources.tsx",
+          "operation": "modify",
+          "description": "Verify trusted resources are fetched and displayed correctly using getAllResources backend capability"
+        },
+        {
+          "path": "frontend/src/components/CybercrimeAwareness.tsx",
+          "operation": "modify",
+          "description": "Verify cybercrime articles with thumbnails are fetched and displayed correctly using getAllCybercrimeArticles backend capability"
+        },
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "modify",
+          "description": "Verify home page links with thumbnails are fetched and displayed correctly using getAllHomePageLinks backend capability with ExternalBlob thumbnails"
+        },
+        {
+          "path": "frontend/src/components/MissionPage.tsx",
+          "operation": "modify",
+          "description": "Verify mission content including title, description, and images array is fetched and displayed correctly using getMissionContent backend capability with ExternalBlob images"
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Verify all React Query hooks for fetching and mutating data are correctly configured to work with the backend interface after deployment"
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add a new 'Additional Resources' tab to the navigation menu and create corresponding page component",
+      "summary": "Verify Additional Resources tab, delete buttons across all content types, and home page links with thumbnails remain functional after redeployment",
       "acceptanceCriteria": [
-        "Navigation menu includes 'Additional Resources' as a new tab option",
-        "Clicking the tab navigates to a new Additional Resources page",
-        "Page follows the existing design system and layout patterns"
+        "Additional Resources tab is accessible in the navigation",
+        "Delete buttons appear on all content types (articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links)",
+        "Delete confirmation dialogs function correctly",
+        "Home page links section displays with thumbnails",
+        "All CRUD operations work as expected post-deployment"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/AdditionalResources.tsx",
-          "operation": "create",
-          "description": "Create a new page component for Additional Resources. Follow the layout pattern used in other pages (TrustedResources, CybercrimeAwareness) with a header section and content area. Include empty state placeholder content for the initial implementation."
-        },
         {
           "path": "frontend/src/components/NavigationMenu.tsx",
           "operation": "modify",
-          "description": "Add a new menu item for 'Additional Resources' with value 'additional-resources'. Position it logically in the menu order, potentially after 'Resources' or at the end."
+          "description": "Verify Additional Resources menu item is present and functional in the navigation dropdown"
+        },
+        {
+          "path": "frontend/src/components/AdditionalResources.tsx",
+          "operation": "modify",
+          "description": "Verify Additional Resources component renders correctly when tab is selected"
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire the new Additional Resources tab into the tab routing logic. Import the AdditionalResources component and add a case for 'additional-resources' in the tab content rendering section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Add a section on the home page below the mission text for displaying links with thumbnails",
-      "acceptanceCriteria": [
-        "New section appears below the mission content on the home page",
-        "Section displays links with associated thumbnail images",
-        "Links open in new tabs when clicked",
-        "Thumbnails are displayed in a responsive grid layout"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/HomePageLinks.tsx",
-          "operation": "create",
-          "description": "Create a new component to display home page links with thumbnails in a responsive grid. Use the backend getAllHomePageLinks query to fetch data. Display each link as a card with thumbnail image (using getDirectURL() from ExternalBlob), title, and clickable URL that opens in a new tab. Include loading skeletons and empty state. Follow the design pattern from LatestProgress and CybercrimeAwareness components for consistent styling."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useGetHomePageLinks query hook that calls backend.getAllHomePageLinks(). Follow the existing query pattern with proper logging and error handling."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Import and render the HomePageLinks component below the MissionPage component when the 'mission' (Overview) tab is active. Position it to appear below the mission text content."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add dialog component for creating and editing home page links with thumbnail upload",
-      "acceptanceCriteria": [
-        "Dialog allows input of link title and URL",
-        "Thumbnail image upload with progress tracking using ExternalBlob pattern",
-        "Form validation for required fields",
-        "Success and error toast notifications on save"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AddHomePageLinkDialog.tsx",
-          "operation": "create",
-          "description": "Create a dialog component for adding home page links. Include form fields for title (text input) and URL (text input with URL validation), plus thumbnail image file upload. Use ExternalBlob.fromBytes() with withUploadProgress() for upload tracking. Follow the pattern from AddArticleDialog.tsx. Display upload percentage during file upload. Verify the blob-storage component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/EditHomePageLinkDialog.tsx",
-          "operation": "create",
-          "description": "Create a dialog component for editing existing home page links. Pre-populate form with current title, URL, and thumbnail. Allow optional thumbnail replacement. Use ExternalBlob upload pattern with progress tracking. Follow the pattern from EditArticleDialog.tsx. Verify the blob-storage component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useAddHomePageLink mutation hook that calls backend.addHomePageLink(title, url, thumbnail). Add useUpdateHomePageLink mutation hook that calls backend.updateHomePageLink(id, title, url, thumbnail). Both should invalidate the home page links query on success and show toast notifications. Follow existing mutation patterns."
-        },
-        {
-          "path": "frontend/src/components/HomePageLinks.tsx",
-          "operation": "modify",
-          "description": "Wire in the Add and Edit dialogs. Add a button to open AddHomePageLinkDialog. Add edit button/icon on each link card that opens EditHomePageLinkDialog with the selected link data."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Add delete button and functionality to all article posts in Latest Progress section",
-      "acceptanceCriteria": [
-        "Delete button visible on each article card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted articles are removed from the list",
-        "Backend deleteArticle function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteArticle mutation hook that calls backend.deleteArticle(id). Invalidate articles query on success and show toast notification. Follow existing mutation patterns with comprehensive logging."
+          "description": "Verify Additional Resources tab state and rendering logic is correctly wired in the main App component"
         },
         {
           "path": "frontend/src/components/LatestProgress.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each article card. When clicked, show a confirmation dialog (using AlertDialog from shadcn/ui) asking for confirmation. On confirm, call the useDeleteArticle mutation with the article ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Add delete button and functionality to all X Posts",
-      "acceptanceCriteria": [
-        "Delete button visible on each X post card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted posts are removed from the gallery",
-        "Backend deleteXPost function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteXPost mutation hook that calls backend.deleteXPost(id). Invalidate X posts query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for articles using deleteArticle backend capability"
         },
         {
           "path": "frontend/src/components/XPosts.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each X post card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteXPost mutation with the post ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Add delete button and functionality to all Ecosystem Spotlight entries",
-      "acceptanceCriteria": [
-        "Delete button visible on each spotlight card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted spotlights are removed from the list",
-        "Backend deleteSpotlight function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteSpotlight mutation hook that calls backend.deleteSpotlight(id). Invalidate spotlights query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for X posts using deleteXPost backend capability"
         },
         {
           "path": "frontend/src/components/EcosystemSpotlight.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each spotlight card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteSpotlight mutation with the spotlight ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Add delete button and functionality to all Investing Wisdom entries",
-      "acceptanceCriteria": [
-        "Delete button visible on each wisdom card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted wisdom entries are removed from the list",
-        "Backend deleteWisdom function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteWisdom mutation hook that calls backend.deleteWisdom(id). Invalidate wisdom query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for spotlight entries using deleteSpotlight backend capability"
         },
         {
           "path": "frontend/src/components/InvestingWisdom.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each wisdom card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteWisdom mutation with the wisdom ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Add delete button and functionality to all Trusted Resources entries",
-      "acceptanceCriteria": [
-        "Delete button visible on each resource card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted resources are removed from the list",
-        "Backend deleteResource function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteResource mutation hook that calls backend.deleteResource(id). Invalidate resources query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for wisdom entries using deleteWisdom backend capability"
         },
         {
           "path": "frontend/src/components/TrustedResources.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each resource card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteResource mutation with the resource ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Add delete button and functionality to all Cybercrime Awareness articles",
-      "acceptanceCriteria": [
-        "Delete button visible on each cybercrime article card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted articles are removed from the list",
-        "Backend deleteCybercrimeArticle function implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteCybercrimeArticle mutation hook that calls backend.deleteCybercrimeArticle(id). Invalidate cybercrime articles query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for resources using deleteResource backend capability"
         },
         {
           "path": "frontend/src/components/CybercrimeAwareness.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each cybercrime article card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteCybercrimeArticle mutation with the article ID. Show loading state during deletion."
-        }
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "summary": "Add delete functionality for home page links with thumbnails",
-      "acceptanceCriteria": [
-        "Delete button visible on each home page link card",
-        "Clicking delete shows confirmation dialog",
-        "Successfully deleted links are removed from the home page",
-        "Backend delete function for home page links implemented and working"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useDeleteHomePageLink mutation hook that calls backend.deleteHomePageLink(id). Invalidate home page links query on success and show toast notification. Follow existing mutation patterns."
+          "description": "Verify delete button and confirmation dialog functionality for cybercrime articles using deleteCybercrimeArticle backend capability"
         },
         {
           "path": "frontend/src/components/HomePageLinks.tsx",
           "operation": "modify",
-          "description": "Add a delete button to each home page link card. When clicked, show a confirmation dialog using AlertDialog. On confirm, call the useDeleteHomePageLink mutation with the link ID. Show loading state during deletion."
+          "description": "Verify delete button and confirmation dialog functionality for home page links using deleteHomePageLink backend capability, and verify thumbnail display using ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/AddArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add article dialog with thumbnail upload works correctly using addArticle backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit article dialog with thumbnail update works correctly using updateArticle backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/AddXPostDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add X post dialog with image upload works correctly using addXPost backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditXPostDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit X post dialog with image update works correctly using updateXPost backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/AddSpotlightDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add spotlight dialog with optional image upload works correctly using addSpotlight backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditSpotlightDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit spotlight dialog with optional image update works correctly using updateSpotlight backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/AddWisdomDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add wisdom dialog works correctly using addWisdom backend capability"
+        },
+        {
+          "path": "frontend/src/components/EditWisdomDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit wisdom dialog works correctly using updateWisdom backend capability"
+        },
+        {
+          "path": "frontend/src/components/AddResourceDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add resource dialog works correctly using addResource backend capability"
+        },
+        {
+          "path": "frontend/src/components/EditResourceDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit resource dialog works correctly using updateResource backend capability"
+        },
+        {
+          "path": "frontend/src/components/AddCybercrimeArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add cybercrime article dialog with thumbnail upload works correctly using addCybercrimeArticle backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditCybercrimeArticleDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit cybercrime article dialog with thumbnail update works correctly using updateCybercrimeArticle backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/AddHomePageLinkDialog.tsx",
+          "operation": "modify",
+          "description": "Verify add home page link dialog with thumbnail upload works correctly using addHomePageLink backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditHomePageLinkDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit home page link dialog with thumbnail update works correctly using updateHomePageLink backend capability with ExternalBlob"
+        },
+        {
+          "path": "frontend/src/components/EditMissionDialog.tsx",
+          "operation": "modify",
+          "description": "Verify edit mission dialog with multiple image uploads works correctly using updateMissionContent backend capability with ExternalBlob array"
         }
       ]
     }
