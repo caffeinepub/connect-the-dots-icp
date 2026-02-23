@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGetAllXPosts, useDeleteXPost } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, AlertCircle } from 'lucide-react';
 import { AddXPostDialog } from './AddXPostDialog';
 import { EditXPostDialog } from './EditXPostDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { XPost } from '../backend';
 
 export function XPosts() {
-  const { data: posts, isLoading } = useGetAllXPosts();
+  const { data: posts, isLoading, isError, error } = useGetAllXPosts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<XPost | null>(null);
   const [deletingPost, setDeletingPost] = useState<XPost | null>(null);
@@ -36,10 +37,10 @@ export function XPosts() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            X Posts Gallery
+            X Posts
           </h2>
           <p className="text-muted-foreground mt-1">
-            Screenshots of favorite X posts about ICP
+            Screenshots of important posts and updates
           </p>
         </div>
         <Button
@@ -61,19 +62,26 @@ export function XPosts() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load posts. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : posts && posts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
             <Card
               key={post.id}
-              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-purple-500/50 transition-all group overflow-hidden"
+              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-cyan-500/50 transition-all group"
             >
-              <CardContent className="p-0">
+              <CardContent className="p-4 space-y-3">
                 <div className="relative">
                   <img
                     src={post.image.getDirectURL()}
-                    alt={post.description || 'X Post'}
-                    className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                    alt="X Post Screenshot"
+                    className="w-full rounded-lg border border-white/10"
                   />
                   <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
@@ -82,7 +90,7 @@ export function XPosts() {
                       className="h-8 w-8 bg-black/60 hover:bg-black/80 text-white"
                       onClick={() => setEditingPost(post)}
                     >
-                      <Pencil className="w-4 h-4" />
+                      <Pencil className="w-3 h-3" />
                     </Button>
                     <Button
                       size="icon"
@@ -90,14 +98,12 @@ export function XPosts() {
                       className="h-8 w-8 bg-black/60 hover:bg-red-600 text-white"
                       onClick={() => setDeletingPost(post)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3" />
                     </Button>
                   </div>
                 </div>
                 {post.description && (
-                  <div className="p-4">
-                    <p className="text-sm text-white">{post.description}</p>
-                  </div>
+                  <p className="text-sm text-white">{post.description}</p>
                 )}
               </CardContent>
             </Card>
@@ -110,7 +116,7 @@ export function XPosts() {
             <Button
               onClick={() => setIsDialogOpen(true)}
               variant="outline"
-              className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
+              className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Post

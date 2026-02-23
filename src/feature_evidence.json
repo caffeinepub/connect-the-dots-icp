@@ -1,4 +1,85 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-ensure-frontend-properly-fetches-and-displays-all-content-from-version-12-across-all-tabs-mission-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-cybercrime-awareness-and-home-page-links",
+      "featureTitle": "Ensure frontend properly fetches and displays all content from Version 12 across all tabs (Mission, Latest Progress, X Posts, Ecosystem Spotlight, Investing Wisdom, Trusted Resources, Cybercrime Awareness, and Home Page Links)",
+      "files": [
+        "frontend/src/components/CybercrimeAwareness.tsx",
+        "frontend/src/components/EcosystemSpotlight.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
+        "frontend/src/components/InvestingWisdom.tsx",
+        "frontend/src/components/LatestProgress.tsx",
+        "frontend/src/components/MissionPage.tsx",
+        "frontend/src/components/TrustedResources.tsx",
+        "frontend/src/components/XPosts.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-fix-any-data-loading-errors-or-empty-states-preventing-content-from-displaying-in-all-tabs-ensuring-proper-error-handling-and-loading-states-for-all-react-query-hooks",
+      "featureTitle": "Fix any data loading errors or empty states preventing content from displaying in all tabs, ensuring proper error handling and loading states for all React Query hooks",
+      "files": [
+        "frontend/src/components/CybercrimeAwareness.tsx",
+        "frontend/src/components/EcosystemSpotlight.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
+        "frontend/src/components/InvestingWisdom.tsx",
+        "frontend/src/components/LatestProgress.tsx",
+        "frontend/src/components/MissionPage.tsx",
+        "frontend/src/components/TrustedResources.tsx",
+        "frontend/src/components/XPosts.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-all-crud-operations-add-edit-delete-work-correctly-for-all-content-types-across-all-tabs",
+      "featureTitle": "Verify all CRUD operations (add, edit, delete) work correctly for all content types across all tabs",
+      "files": [
+        "frontend/src/components/CybercrimeAwareness.tsx",
+        "frontend/src/components/EcosystemSpotlight.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
+        "frontend/src/components/InvestingWisdom.tsx",
+        "frontend/src/components/LatestProgress.tsx",
+        "frontend/src/components/MissionPage.tsx",
+        "frontend/src/components/TrustedResources.tsx",
+        "frontend/src/components/XPosts.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

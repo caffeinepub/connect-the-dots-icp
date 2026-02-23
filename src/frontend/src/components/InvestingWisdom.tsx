@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGetAllWisdom, useDeleteWisdom } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Quote, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Quote, Pencil, Trash2, AlertCircle } from 'lucide-react';
 import { AddWisdomDialog } from './AddWisdomDialog';
 import { EditWisdomDialog } from './EditWisdomDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Wisdom } from '../backend';
 
 export function InvestingWisdom() {
-  const { data: wisdom, isLoading } = useGetAllWisdom();
+  const { data: wisdom, isLoading, isError, error } = useGetAllWisdom();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingWisdom, setEditingWisdom] = useState<Wisdom | null>(null);
   const [deletingWisdom, setDeletingWisdom] = useState<Wisdom | null>(null);
@@ -62,6 +63,13 @@ export function InvestingWisdom() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load wisdom entries. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : wisdom && wisdom.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {wisdom.map((item) => (

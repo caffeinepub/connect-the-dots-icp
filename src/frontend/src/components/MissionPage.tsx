@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { useGetMissionContent } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Edit, Target } from 'lucide-react';
+import { Edit, Target, AlertCircle } from 'lucide-react';
 import { EditMissionDialog } from './EditMissionDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function MissionPage() {
-  const { data: missionContent, isLoading } = useGetMissionContent();
+  const { data: missionContent, isLoading, isError, error } = useGetMissionContent();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -39,6 +40,13 @@ export function MissionPage() {
             <Skeleton className="h-64 w-full" />
           </CardContent>
         </Card>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load mission content. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : missionContent ? (
         <Card className="bg-black/40 backdrop-blur-xl border-white/10">
           <CardContent className="p-8 space-y-6">
@@ -69,21 +77,24 @@ export function MissionPage() {
       ) : (
         <Card className="bg-black/40 backdrop-blur-xl border-white/10">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Target className="w-16 h-16 text-purple-400/50 mb-4" />
-            <p className="text-muted-foreground mb-4">No mission content yet. Add your mission statement!</p>
+            <Target className="w-12 h-12 text-purple-400 mb-4" />
+            <p className="text-muted-foreground mb-4">No mission content yet. Click Edit Mission to add content.</p>
             <Button
               onClick={() => setIsDialogOpen(true)}
               variant="outline"
               className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
             >
               <Edit className="w-4 h-4 mr-2" />
-              Add Mission
+              Edit Mission
             </Button>
           </CardContent>
         </Card>
       )}
 
-      <EditMissionDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      <EditMissionDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
     </div>
   );
 }

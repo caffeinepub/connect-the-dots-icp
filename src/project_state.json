@@ -1,11 +1,38 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "Redeployment of app with content preservation",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "existing_features": [],
+  "known_issues": [
+    "Content from Version 12 not displaying after redeployment - articles, links, pictures missing across tabs"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-ensure-frontend-properly-fetches-and-displays-all-content-from-version-12-across-all-tabs-mission-latest-progress-x-posts-ecosystem-spotlight-investing-wisdom-trusted-resources-cybercrime-awareness-and-home-page-links",
+      "title": "Ensure frontend properly fetches and displays all content from Version 12 across all tabs (Mission, Latest Progress, X Posts, Ecosystem Spotlight, Investing Wisdom, Trusted Resources, Cybercrime Awareness, and Home Page Links)",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-any-data-loading-errors-or-empty-states-preventing-content-from-displaying-in-all-tabs-ensuring-proper-error-handling-and-loading-states-for-all-react-query-hooks",
+      "title": "Fix any data loading errors or empty states preventing content from displaying in all tabs, ensuring proper error handling and loading states for all React Query hooks",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-all-crud-operations-add-edit-delete-work-correctly-for-all-content-types-across-all-tabs",
+      "title": "Verify all CRUD operations (add, edit, delete) work correctly for all content types across all tabs",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    }
+  ],
   "new_feature_requests": [
     {
       "id": "AR-1",
@@ -20,6 +47,14 @@
       "summary": "Verify that the Additional Resources tab, delete buttons across all content types, and home page links with thumbnails (features from Version 12) remain functional after redeployment",
       "reqIds": [
         "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Verify backend data persistence for all content types (articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content) and ensure data is being retrieved correctly from the backend actor",
+      "reqIds": [
+        "REQ-3"
       ],
       "status": "pending"
     }

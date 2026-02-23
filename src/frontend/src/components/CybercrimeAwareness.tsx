@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useGetAllCybercrimeArticles, useDeleteCybercrimeArticle } from '../hooks/useQueries';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ExternalLink, AlertTriangle, Pencil, Trash2 } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, AlertCircle, ShieldAlert } from 'lucide-react';
 import { AddCybercrimeArticleDialog } from './AddCybercrimeArticleDialog';
 import { EditCybercrimeArticleDialog } from './EditCybercrimeArticleDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Article } from '../backend';
 
 export function CybercrimeAwareness() {
-  const { data: articles, isLoading } = useGetAllCybercrimeArticles();
+  const { data: articles, isLoading, isError, error } = useGetAllCybercrimeArticles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
   const [deletingArticle, setDeletingArticle] = useState<Article | null>(null);
@@ -36,11 +37,11 @@ export function CybercrimeAwareness() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent flex items-center gap-2">
-            <AlertTriangle className="w-6 h-6 text-red-400" />
+            <ShieldAlert className="w-6 h-6 text-red-400" />
             Cybercrime Awareness
           </h2>
           <p className="text-muted-foreground mt-1">
-            Highlighting the global cybercrime crisis
+            Stay informed about security threats and scams
           </p>
         </div>
         <Button
@@ -56,42 +57,49 @@ export function CybercrimeAwareness() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
             <Card key={i} className="bg-black/40 backdrop-blur-xl border-white/10">
-              <CardHeader>
-                <Skeleton className="h-48 w-full rounded-lg" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-full" />
+              <CardContent className="p-0">
+                <Skeleton className="h-48 w-full rounded-t-lg" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load cybercrime articles. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : articles && articles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
             <Card
               key={article.id}
-              className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-red-500/50 transition-all group overflow-hidden"
+              className="bg-black/40 backdrop-blur-xl border-red-500/30 hover:border-red-500/60 transition-all overflow-hidden group"
             >
-              <CardHeader className="p-0">
+              <CardContent className="p-0">
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={article.thumbnail.getDirectURL()}
                     alt={article.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute top-4 right-4">
-                    <AlertTriangle className="w-6 h-6 text-red-400" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute top-2 left-2">
+                    <ShieldAlert className="w-6 h-6 text-red-400" />
                   </div>
-                  <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
                       size="icon"
                       variant="secondary"
                       className="h-8 w-8 bg-black/60 hover:bg-black/80 text-white"
                       onClick={() => setEditingArticle(article)}
                     >
-                      <Pencil className="w-4 h-4" />
+                      <Pencil className="w-3 h-3" />
                     </Button>
                     <Button
                       size="icon"
@@ -99,23 +107,23 @@ export function CybercrimeAwareness() {
                       className="h-8 w-8 bg-black/60 hover:bg-red-600 text-white"
                       onClick={() => setDeletingArticle(article)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3" />
                     </Button>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                <CardTitle className="text-lg mb-3 line-clamp-2 text-white">
-                  {article.title}
-                </CardTitle>
-                <a
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors"
-                >
-                  Read Article <ExternalLink className="w-4 h-4" />
-                </a>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                    {article.title}
+                  </h3>
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    Read More <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
               </CardContent>
             </Card>
           ))}

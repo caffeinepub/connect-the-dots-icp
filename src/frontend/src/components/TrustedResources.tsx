@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGetAllResources, useDeleteResource } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, AlertCircle } from 'lucide-react';
 import { AddResourceDialog } from './AddResourceDialog';
 import { EditResourceDialog } from './EditResourceDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Resource } from '../backend';
 
 export function TrustedResources() {
-  const { data: resources, isLoading } = useGetAllResources();
+  const { data: resources, isLoading, isError, error } = useGetAllResources();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [deletingResource, setDeletingResource] = useState<Resource | null>(null);
@@ -64,6 +65,13 @@ export function TrustedResources() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load resources. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : resources && resources.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {resources.map((resource) => (

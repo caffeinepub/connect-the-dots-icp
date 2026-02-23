@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGetAllSpotlights, useDeleteSpotlight } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Calendar, Pencil, ExternalLink, Trash2 } from 'lucide-react';
+import { Plus, Calendar, Pencil, ExternalLink, Trash2, AlertCircle } from 'lucide-react';
 import { AddSpotlightDialog } from './AddSpotlightDialog';
 import { EditSpotlightDialog } from './EditSpotlightDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Spotlight } from '../backend';
 
 export function EcosystemSpotlight() {
-  const { data: spotlights, isLoading } = useGetAllSpotlights();
+  const { data: spotlights, isLoading, isError, error } = useGetAllSpotlights();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingSpotlight, setEditingSpotlight] = useState<Spotlight | null>(null);
   const [deletingSpotlight, setDeletingSpotlight] = useState<Spotlight | null>(null);
@@ -69,6 +70,13 @@ export function EcosystemSpotlight() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load spotlights. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : spotlights && spotlights.length > 0 ? (
         <div className="space-y-4">
           {spotlights.map((spotlight) => (

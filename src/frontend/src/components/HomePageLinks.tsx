@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useGetHomePageLinks } from '../hooks/useQueries';
+import { useGetHomePageLinks, useDeleteHomePageLink } from '../hooks/useQueries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, AlertCircle } from 'lucide-react';
 import { AddHomePageLinkDialog } from './AddHomePageLinkDialog';
 import { EditHomePageLinkDialog } from './EditHomePageLinkDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,12 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { HomePageLink } from '../backend';
-import { useDeleteHomePageLink } from '../hooks/useQueries';
-import { toast } from 'sonner';
 
 export function HomePageLinks() {
-  const { data: links, isLoading } = useGetHomePageLinks();
+  const { data: links, isLoading, isError, error } = useGetHomePageLinks();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<HomePageLink | null>(null);
   const [deletingLink, setDeletingLink] = useState<HomePageLink | null>(null);
@@ -29,15 +28,8 @@ export function HomePageLinks() {
 
   const handleDelete = async () => {
     if (!deletingLink) return;
-
-    try {
-      await deleteLink.mutateAsync(deletingLink.id);
-      toast.success('Link deleted successfully');
-      setDeletingLink(null);
-    } catch (error) {
-      toast.error('Failed to delete link');
-      console.error('Delete error:', error);
-    }
+    await deleteLink.mutateAsync(deletingLink.id);
+    setDeletingLink(null);
   };
 
   return (
@@ -71,6 +63,13 @@ export function HomePageLinks() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <Alert variant="destructive" className="bg-red-950/50 border-red-500/50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-white">
+            Failed to load links. {error instanceof Error ? error.message : 'Please try again later.'}
+          </AlertDescription>
+        </Alert>
       ) : links && links.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {links.map((link) => (

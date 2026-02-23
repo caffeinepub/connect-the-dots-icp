@@ -1,64 +1,111 @@
 {
   "kind": "build_request",
-  "title": "Redeploy application with existing content preservation",
-  "projectName": "Connect the Dots",
-  "priority": "normal",
+  "title": "Restore and display all Version 12 content across tabs",
+  "projectName": "Connect the Dots ICP",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Redeploy the current application (Version 12) to production while ensuring all existing backend data is preserved, including articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content",
-      "target": "both",
+      "id": "REQ-3",
+      "text": "Verify backend data persistence for all content types (articles, X posts, spotlights, wisdom entries, resources, cybercrime articles, home page links, and mission content) and ensure data is being retrieved correctly from the backend actor",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-11",
-          "msg-12"
+          "msg-5"
         ],
         "quotes": [
-          "3 please. Will save me time having to re-enter all the info"
+          "Can you not find all my data?",
+          "I need you to find all the content I previously added"
         ]
       },
       "acceptanceCriteria": [
-        "Application successfully deploys to production",
-        "All existing articles remain accessible after deployment",
-        "All X posts and their images are preserved",
-        "All spotlight entries with their content and images remain intact",
-        "All wisdom entries are preserved",
-        "All trusted resources remain accessible",
-        "All cybercrime articles with thumbnails are preserved",
-        "All home page links with thumbnails remain functional",
-        "Mission content including title, description, and images is preserved",
-        "No data loss occurs during the deployment process"
+        "Backend returns all previously stored articles with titles, URLs, and thumbnails",
+        "Backend returns all X posts with screenshots and descriptions",
+        "Backend returns all ecosystem spotlights with content and images",
+        "Backend returns all investing wisdom entries with quotes and authors",
+        "Backend returns all trusted resources with names, descriptions, and URLs",
+        "Backend returns all cybercrime articles with titles, URLs, and thumbnails",
+        "Backend returns all home page links with titles, URLs, and thumbnails",
+        "Backend returns mission content with title, description, and images"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Verify that the Additional Resources tab, delete buttons across all content types, and home page links with thumbnails (features from Version 12) remain functional after redeployment",
+      "id": "REQ-4",
+      "text": "Ensure frontend properly fetches and displays all content from Version 12 across all tabs (Mission, Latest Progress, X Posts, Ecosystem Spotlight, Investing Wisdom, Trusted Resources, Cybercrime Awareness, and Home Page Links)",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-11",
-          "msg-12"
+          "msg-5"
+        ],
+        "quotes": [
+          "All tabs should be populated with the articles, links, pictures",
+          "Everything displaying properly"
         ]
       },
       "acceptanceCriteria": [
-        "Additional Resources tab is accessible in the navigation",
-        "Delete buttons appear on all content types (articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links)",
-        "Delete confirmation dialogs function correctly",
-        "Home page links section displays with thumbnails",
-        "All CRUD operations work as expected post-deployment"
+        "Mission tab displays mission content with title, description, and all images",
+        "Latest Progress tab shows all articles with thumbnails and titles",
+        "X Posts tab displays all uploaded screenshots with descriptions",
+        "Ecosystem Spotlight tab shows all spotlight entries with content and images",
+        "Investing Wisdom tab displays all quotes with authors",
+        "Trusted Resources tab shows all resources with names, descriptions, and URLs",
+        "Cybercrime Awareness tab displays all articles with thumbnails",
+        "Home page displays all quick links with thumbnails",
+        "All images and thumbnails render correctly across all tabs"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Fix any data loading errors or empty states preventing content from displaying in all tabs, ensuring proper error handling and loading states for all React Query hooks",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Nothing is working and I've tried many times",
+          "Where is my website that I was working on"
+        ]
+      },
+      "acceptanceCriteria": [
+        "React Query hooks successfully fetch data from backend actor",
+        "Loading states display correctly while fetching data",
+        "Error states show meaningful messages if data fetch fails",
+        "Empty states only appear when no data exists, not due to fetch failures",
+        "All useQueries hooks properly use the authenticated actor instance"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Verify all CRUD operations (add, edit, delete) work correctly for all content types across all tabs",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Everything displaying properly"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Add dialogs successfully create new entries for all content types",
+        "Edit dialogs successfully update existing entries with all fields",
+        "Delete buttons remove entries with confirmation dialogs",
+        "Changes persist after page refresh",
+        "Toast notifications appear for all successful operations"
       ]
     }
   ],
   "constraints": [
-    "Must preserve all existing backend data during redeployment",
-    "Must maintain the current Version 12 functionality including Additional Resources tab and delete buttons",
-    "Must use the existing migration.mo to ensure state preservation"
+    "Do not modify the backend schema or data structures",
+    "Do not change the single-actor architecture in backend/main.mo",
+    "Do not edit immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui/*",
+    "Preserve all existing user data from Version 12"
   ],
   "nonGoals": [
-    "Adding new features beyond Version 12",
-    "Modifying the data schema or backend structure",
-    "Changing the UI or design elements",
-    "Rolling back to earlier versions"
+    "Adding new content types or features not mentioned",
+    "Changing the UI design or styling",
+    "Modifying authentication flow",
+    "Adding new tabs or navigation items"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,211 +1,253 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Redeploy Application with Data Preservation",
+  "title": "Restore and display all Version 12 content across tabs",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Redeploy application to production preserving all backend data including articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links, and mission content",
+      "id": "REQ-4",
+      "summary": "Ensure frontend properly fetches and displays all content from Version 12 across all tabs",
       "acceptanceCriteria": [
-        "Application successfully deploys to production",
-        "All existing articles remain accessible after deployment",
-        "All X posts and their images are preserved",
-        "All spotlight entries with their content and images remain intact",
-        "All wisdom entries are preserved",
-        "All trusted resources remain accessible",
-        "All cybercrime articles with thumbnails are preserved",
-        "All home page links with thumbnails remain functional",
-        "Mission content including title, description, and images is preserved",
-        "No data loss occurs during the deployment process"
+        "Mission tab displays mission content with title, description, and all images",
+        "Latest Progress tab shows all articles with thumbnails and titles",
+        "X Posts tab displays all uploaded screenshots with descriptions",
+        "Ecosystem Spotlight tab shows all spotlight entries with content and images",
+        "Investing Wisdom tab displays all quotes with authors",
+        "Trusted Resources tab shows all resources with names, descriptions, and URLs",
+        "Cybercrime Awareness tab displays all articles with thumbnails",
+        "Home page displays all quick links with thumbnails",
+        "All images and thumbnails render correctly across all tabs"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/MissionPage.tsx",
           "operation": "modify",
-          "description": "Verify all tab navigation and content sections remain wired correctly for Mission/Overview with HomePageLinks, Progress, XPosts, Spotlight, Wisdom, Resources, Cybercrime, and Additional Resources tabs"
+          "description": "Verify the component correctly fetches mission content using the useGetMissionContent hook and displays the title, description, and all images using ExternalBlob.getDirectURL() for image rendering. Ensure proper handling of the Option<MissionContent> return type from the backend and display all images in the images array."
         },
         {
           "path": "frontend/src/components/LatestProgress.tsx",
           "operation": "modify",
-          "description": "Verify article fetching, display, and CRUD operations work correctly post-deployment using getAllArticles backend capability"
+          "description": "Verify the component correctly fetches articles using the useGetAllArticles hook and displays each article's title, URL, and thumbnail image using ExternalBlob.getDirectURL() for the thumbnail rendering. Ensure the grid layout properly displays all articles with their associated metadata."
         },
         {
           "path": "frontend/src/components/XPosts.tsx",
           "operation": "modify",
-          "description": "Verify X post fetching and image display work correctly post-deployment using getAllXPosts backend capability with ExternalBlob images"
+          "description": "Verify the component correctly fetches X posts using the useGetAllXPosts hook and displays each post's image screenshot using ExternalBlob.getDirectURL() along with the optional description. Ensure the gallery layout renders all uploaded screenshots properly."
         },
         {
           "path": "frontend/src/components/EcosystemSpotlight.tsx",
           "operation": "modify",
-          "description": "Verify spotlight entries with content and optional images are fetched and displayed correctly using getAllSpotlights backend capability"
+          "description": "Verify the component correctly fetches spotlights using the useGetAllSpotlights hook and displays each spotlight's title, content, timestamp, and optional image using ExternalBlob.getDirectURL() when present. Ensure proper handling of the optional image field and link field."
         },
         {
           "path": "frontend/src/components/InvestingWisdom.tsx",
           "operation": "modify",
-          "description": "Verify wisdom entries are fetched and displayed correctly using getAllWisdom backend capability"
+          "description": "Verify the component correctly fetches wisdom entries using the useGetAllWisdom hook and displays each entry's quote and author. Ensure the grid layout properly displays all wisdom entries with their associated metadata."
         },
         {
           "path": "frontend/src/components/TrustedResources.tsx",
           "operation": "modify",
-          "description": "Verify trusted resources are fetched and displayed correctly using getAllResources backend capability"
+          "description": "Verify the component correctly fetches resources using the useGetAllResources hook and displays each resource's name, description, and URL. Ensure the grid layout properly displays all resources with their associated metadata and external links."
         },
         {
           "path": "frontend/src/components/CybercrimeAwareness.tsx",
           "operation": "modify",
-          "description": "Verify cybercrime articles with thumbnails are fetched and displayed correctly using getAllCybercrimeArticles backend capability"
+          "description": "Verify the component correctly fetches cybercrime articles using the useGetAllCybercrimeArticles hook and displays each article's title, URL, and thumbnail using ExternalBlob.getDirectURL() for the thumbnail rendering. Ensure the grid layout properly displays all cybercrime articles."
         },
         {
           "path": "frontend/src/components/HomePageLinks.tsx",
           "operation": "modify",
-          "description": "Verify home page links with thumbnails are fetched and displayed correctly using getAllHomePageLinks backend capability with ExternalBlob thumbnails"
-        },
-        {
-          "path": "frontend/src/components/MissionPage.tsx",
-          "operation": "modify",
-          "description": "Verify mission content including title, description, and images array is fetched and displayed correctly using getMissionContent backend capability with ExternalBlob images"
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Verify all React Query hooks for fetching and mutating data are correctly configured to work with the backend interface after deployment"
+          "description": "Verify the component correctly fetches home page links using the useGetAllHomePageLinks hook and displays each link's title, URL, and thumbnail using ExternalBlob.getDirectURL() for the thumbnail rendering. Ensure the grid layout properly displays all quick links."
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Verify Additional Resources tab, delete buttons across all content types, and home page links with thumbnails remain functional after redeployment",
+      "id": "REQ-5",
+      "summary": "Fix data loading errors or empty states preventing content from displaying in all tabs",
       "acceptanceCriteria": [
-        "Additional Resources tab is accessible in the navigation",
-        "Delete buttons appear on all content types (articles, X posts, spotlights, wisdom, resources, cybercrime articles, home page links)",
-        "Delete confirmation dialogs function correctly",
-        "Home page links section displays with thumbnails",
-        "All CRUD operations work as expected post-deployment"
+        "React Query hooks successfully fetch data from backend actor",
+        "Loading states display correctly while fetching data",
+        "Error states show meaningful messages if data fetch fails",
+        "Empty states only appear when no data exists, not due to fetch failures",
+        "All useQueries hooks properly use the authenticated actor instance"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/NavigationMenu.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Verify Additional Resources menu item is present and functional in the navigation dropdown"
+          "description": "Verify all query hooks (useGetMissionContent, useGetAllArticles, useGetAllXPosts, useGetAllSpotlights, useGetAllWisdom, useGetAllResources, useGetAllCybercrimeArticles, useGetAllHomePageLinks) are properly configured with the actor instance from useActor hook. Ensure enabled property is set correctly to prevent queries from running when actor is null. Add proper error handling for each query hook and verify queryKey arrays are unique and stable."
         },
         {
-          "path": "frontend/src/components/AdditionalResources.tsx",
+          "path": "frontend/src/components/MissionPage.tsx",
           "operation": "modify",
-          "description": "Verify Additional Resources component renders correctly when tab is selected"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Verify Additional Resources tab state and rendering logic is correctly wired in the main App component"
+          "description": "Add explicit error handling for the useGetMissionContent query. Display a loading skeleton during the isLoading state. Show a meaningful error message if the query fails. Only show the empty state card when data successfully loads but missionContent is null, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/LatestProgress.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for articles using deleteArticle backend capability"
+          "description": "Add explicit error handling for the useGetAllArticles query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the articles array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/XPosts.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for X posts using deleteXPost backend capability"
+          "description": "Add explicit error handling for the useGetAllXPosts query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the posts array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/EcosystemSpotlight.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for spotlight entries using deleteSpotlight backend capability"
+          "description": "Add explicit error handling for the useGetAllSpotlights query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the spotlights array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/InvestingWisdom.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for wisdom entries using deleteWisdom backend capability"
+          "description": "Add explicit error handling for the useGetAllWisdom query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the wisdom array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/TrustedResources.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for resources using deleteResource backend capability"
+          "description": "Add explicit error handling for the useGetAllResources query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the resources array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/CybercrimeAwareness.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for cybercrime articles using deleteCybercrimeArticle backend capability"
+          "description": "Add explicit error handling for the useGetAllCybercrimeArticles query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the articles array is empty, not when there's a loading or error state."
         },
         {
           "path": "frontend/src/components/HomePageLinks.tsx",
           "operation": "modify",
-          "description": "Verify delete button and confirmation dialog functionality for home page links using deleteHomePageLink backend capability, and verify thumbnail display using ExternalBlob"
-        },
+          "description": "Add explicit error handling for the useGetAllHomePageLinks query. Verify loading skeletons display during isLoading state. Show a meaningful error message if the query fails. Only show the empty state when data successfully loads but the links array is empty, not when there's a loading or error state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Verify all CRUD operations work correctly for all content types across all tabs",
+      "acceptanceCriteria": [
+        "Add dialogs successfully create new entries for all content types",
+        "Edit dialogs successfully update existing entries with all fields",
+        "Delete buttons remove entries with confirmation dialogs",
+        "Changes persist after page refresh",
+        "Toast notifications appear for all successful operations"
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/AddArticleDialog.tsx",
           "operation": "modify",
-          "description": "Verify add article dialog with thumbnail upload works correctly using addArticle backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useAddArticle mutation hook correctly with proper error handling. Ensure thumbnail upload using ExternalBlob.fromBytes with upload progress tracking works correctly. Verify form validation and toast notifications display on success/error. Confirm the dialog triggers query invalidation after successful submission to refresh the articles list."
         },
         {
           "path": "frontend/src/components/EditArticleDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit article dialog with thumbnail update works correctly using updateArticle backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useUpdateArticle mutation hook correctly with proper error handling. Ensure optional thumbnail replacement using ExternalBlob works correctly with progress tracking. Verify form validation, pre-population of existing values, and toast notifications. Confirm query invalidation occurs after successful update."
+        },
+        {
+          "path": "frontend/src/components/LatestProgress.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteArticle mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddXPostDialog.tsx",
           "operation": "modify",
-          "description": "Verify add X post dialog with image upload works correctly using addXPost backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useAddXPost mutation hook correctly with proper error handling. Ensure image upload using ExternalBlob.fromBytes with upload progress tracking works correctly. Verify form validation and toast notifications display on success/error. Confirm query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditXPostDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit X post dialog with image update works correctly using updateXPost backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useUpdateXPost mutation hook correctly with proper error handling. Ensure optional image replacement using ExternalBlob works correctly with progress tracking. Verify form validation, pre-population of existing values, and toast notifications. Confirm query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/XPosts.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteXPost mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddSpotlightDialog.tsx",
           "operation": "modify",
-          "description": "Verify add spotlight dialog with optional image upload works correctly using addSpotlight backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useAddSpotlight mutation hook correctly with proper error handling. Ensure optional image upload using ExternalBlob.fromBytes with upload progress tracking works correctly. Verify form validation for required fields (title, content) and optional fields (link, image). Confirm toast notifications and query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditSpotlightDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit spotlight dialog with optional image update works correctly using updateSpotlight backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useUpdateSpotlight mutation hook correctly with proper error handling. Ensure optional image replacement using ExternalBlob works correctly with progress tracking. Verify form validation, pre-population of existing values including optional fields, and toast notifications. Confirm query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/EcosystemSpotlight.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteSpotlight mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddWisdomDialog.tsx",
           "operation": "modify",
-          "description": "Verify add wisdom dialog works correctly using addWisdom backend capability"
+          "description": "Verify the dialog uses useAddWisdom mutation hook correctly with proper error handling. Verify form validation for quote and author fields. Confirm toast notifications and query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditWisdomDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit wisdom dialog works correctly using updateWisdom backend capability"
+          "description": "Verify the dialog uses useUpdateWisdom mutation hook correctly with proper error handling. Verify form validation and pre-population of existing quote and author values. Confirm toast notifications and query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/InvestingWisdom.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteWisdom mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddResourceDialog.tsx",
           "operation": "modify",
-          "description": "Verify add resource dialog works correctly using addResource backend capability"
+          "description": "Verify the dialog uses useAddResource mutation hook correctly with proper error handling. Verify form validation for name, description, and URL fields. Confirm toast notifications and query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditResourceDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit resource dialog works correctly using updateResource backend capability"
+          "description": "Verify the dialog uses useUpdateResource mutation hook correctly with proper error handling. Verify form validation and pre-population of existing name, description, and URL values. Confirm toast notifications and query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/TrustedResources.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteResource mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddCybercrimeArticleDialog.tsx",
           "operation": "modify",
-          "description": "Verify add cybercrime article dialog with thumbnail upload works correctly using addCybercrimeArticle backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useAddCybercrimeArticle mutation hook correctly with proper error handling. Ensure thumbnail upload using ExternalBlob.fromBytes with upload progress tracking works correctly. Verify form validation and toast notifications. Confirm query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditCybercrimeArticleDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit cybercrime article dialog with thumbnail update works correctly using updateCybercrimeArticle backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useUpdateCybercrimeArticle mutation hook correctly with proper error handling. Ensure optional thumbnail replacement using ExternalBlob works correctly with progress tracking. Verify form validation, pre-population of existing values, and toast notifications. Confirm query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/CybercrimeAwareness.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteCybercrimeArticle mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/AddHomePageLinkDialog.tsx",
           "operation": "modify",
-          "description": "Verify add home page link dialog with thumbnail upload works correctly using addHomePageLink backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useAddHomePageLink mutation hook correctly with proper error handling. Ensure thumbnail upload using ExternalBlob.fromBytes with upload progress tracking works correctly. Verify form validation and toast notifications. Confirm query invalidation after successful submission."
         },
         {
           "path": "frontend/src/components/EditHomePageLinkDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit home page link dialog with thumbnail update works correctly using updateHomePageLink backend capability with ExternalBlob"
+          "description": "Verify the dialog uses useUpdateHomePageLink mutation hook correctly with proper error handling. Ensure optional thumbnail replacement using ExternalBlob works correctly with progress tracking. Verify form validation, pre-population of existing values, and toast notifications. Confirm query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "modify",
+          "description": "Verify the delete functionality uses useDeleteHomePageLink mutation hook with proper confirmation dialog. Ensure toast notifications display on success/error and query invalidation refreshes the list after deletion."
         },
         {
           "path": "frontend/src/components/EditMissionDialog.tsx",
           "operation": "modify",
-          "description": "Verify edit mission dialog with multiple image uploads works correctly using updateMissionContent backend capability with ExternalBlob array"
+          "description": "Verify the dialog uses useUpdateMissionContent mutation hook correctly with proper error handling. Ensure multiple image uploads using ExternalBlob.fromBytes with upload progress tracking works correctly for the images array. Verify form validation for title and description fields. Confirm toast notifications and query invalidation after successful update."
+        },
+        {
+          "path": "frontend/src/components/MissionPage.tsx",
+          "operation": "modify",
+          "description": "Verify the edit mission functionality is properly wired to the EditMissionDialog component and that the mutation triggers query invalidation to refresh the displayed mission content after successful updates."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Verify all mutation hooks (useAddArticle, useUpdateArticle, useDeleteArticle, useAddXPost, useUpdateXPost, useDeleteXPost, useAddSpotlight, useUpdateSpotlight, useDeleteSpotlight, useAddWisdom, useUpdateWisdom, useDeleteWisdom, useAddResource, useUpdateResource, useDeleteResource, useAddCybercrimeArticle, useUpdateCybercrimeArticle, useDeleteCybercrimeArticle, useAddHomePageLink, useUpdateHomePageLink, useDeleteHomePageLink, useUpdateMissionContent) are properly configured with the actor instance and include query invalidation in the onSuccess callback to refresh the corresponding data lists after mutations complete successfully."
         }
       ]
     }

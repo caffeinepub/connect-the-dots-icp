@@ -11,16 +11,15 @@ export function useGetAllArticles() {
   return useQuery<Article[]>({
     queryKey: ['articles'],
     queryFn: async () => {
-      console.log('[useGetAllArticles] Query function called', { actorReady: !!actor });
       if (!actor) {
-        console.log('[useGetAllArticles] Actor not ready, returning empty array');
-        return [];
+        throw new Error('Backend connection not ready');
       }
       const articles = await actor.getAllArticles();
-      console.log('[useGetAllArticles] Fetched articles:', articles.length);
       return articles;
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -30,33 +29,18 @@ export function useAddArticle() {
 
   return useMutation({
     mutationFn: async ({ title, url, thumbnail }: { title: string; url: string; thumbnail: ExternalBlob }) => {
-      console.log('[useAddArticle] Mutation function called', { 
-        title, 
-        url, 
-        actorReady: !!actor,
-        timestamp: new Date().toISOString()
-      });
-      
       if (!actor) {
-        console.error('[useAddArticle] Actor not available');
         throw new Error('Backend connection not ready');
       }
-
-      console.log('[useAddArticle] Calling actor.addArticle with params:', { title, url });
-      const result = await actor.addArticle(title, url, thumbnail);
-      console.log('[useAddArticle] Actor call completed', { result, timestamp: new Date().toISOString() });
-      return result;
+      return await actor.addArticle(title, url, thumbnail);
     },
     onSuccess: () => {
-      console.log('[useAddArticle] Mutation succeeded, invalidating queries', { timestamp: new Date().toISOString() });
       queryClient.invalidateQueries({ queryKey: ['articles'] });
+      toast.success('Article added successfully');
     },
     onError: (error) => {
-      console.error('[useAddArticle] Mutation failed', { 
-        error, 
-        errorMessage: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      });
+      toast.error('Failed to add article');
+      console.error('Add article error:', error);
     },
   });
 }
@@ -72,6 +56,10 @@ export function useUpdateArticle() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
+      toast.success('Article updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update article');
     },
   });
 }
@@ -102,10 +90,14 @@ export function useGetAllXPosts() {
   return useQuery<XPost[]>({
     queryKey: ['xposts'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllXPosts();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -120,6 +112,10 @@ export function useAddXPost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['xposts'] });
+      toast.success('Post added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add post');
     },
   });
 }
@@ -135,6 +131,10 @@ export function useUpdateXPost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['xposts'] });
+      toast.success('Post updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update post');
     },
   });
 }
@@ -165,10 +165,14 @@ export function useGetAllSpotlights() {
   return useQuery<Spotlight[]>({
     queryKey: ['spotlights'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllSpotlights();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -183,6 +187,10 @@ export function useAddSpotlight() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spotlights'] });
+      toast.success('Spotlight added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add spotlight');
     },
   });
 }
@@ -198,6 +206,10 @@ export function useUpdateSpotlight() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spotlights'] });
+      toast.success('Spotlight updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update spotlight');
     },
   });
 }
@@ -228,10 +240,14 @@ export function useGetAllWisdom() {
   return useQuery<Wisdom[]>({
     queryKey: ['wisdom'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllWisdom();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -246,6 +262,10 @@ export function useAddWisdom() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wisdom'] });
+      toast.success('Wisdom added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add wisdom');
     },
   });
 }
@@ -261,6 +281,10 @@ export function useUpdateWisdom() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wisdom'] });
+      toast.success('Wisdom updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update wisdom');
     },
   });
 }
@@ -291,10 +315,14 @@ export function useGetAllResources() {
   return useQuery<Resource[]>({
     queryKey: ['resources'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllResources();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -309,6 +337,10 @@ export function useAddResource() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
+      toast.success('Resource added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add resource');
     },
   });
 }
@@ -324,6 +356,10 @@ export function useUpdateResource() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
+      toast.success('Resource updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update resource');
     },
   });
 }
@@ -354,10 +390,14 @@ export function useGetAllCybercrimeArticles() {
   return useQuery<Article[]>({
     queryKey: ['cybercrimeArticles'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllCybercrimeArticles();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -372,6 +412,10 @@ export function useAddCybercrimeArticle() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cybercrimeArticles'] });
+      toast.success('Article added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add article');
     },
   });
 }
@@ -387,6 +431,10 @@ export function useUpdateCybercrimeArticle() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cybercrimeArticles'] });
+      toast.success('Article updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update article');
     },
   });
 }
@@ -417,10 +465,14 @@ export function useGetMissionContent() {
   return useQuery<MissionContent | null>({
     queryKey: ['missionContent'],
     queryFn: async () => {
-      if (!actor) return null;
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getMissionContent();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -435,6 +487,10 @@ export function useUpdateMissionContent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['missionContent'] });
+      toast.success('Mission content updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update mission content');
     },
   });
 }
@@ -446,10 +502,14 @@ export function useGetHomePageLinks() {
   return useQuery<HomePageLink[]>({
     queryKey: ['homePageLinks'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        throw new Error('Backend connection not ready');
+      }
       return actor.getAllHomePageLinks();
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -464,6 +524,10 @@ export function useAddHomePageLink() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['homePageLinks'] });
+      toast.success('Link added successfully');
+    },
+    onError: () => {
+      toast.error('Failed to add link');
     },
   });
 }
@@ -479,6 +543,10 @@ export function useUpdateHomePageLink() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['homePageLinks'] });
+      toast.success('Link updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update link');
     },
   });
 }
