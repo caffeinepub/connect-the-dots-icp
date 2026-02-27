@@ -1,0 +1,45 @@
+{
+  "kind": "build_request",
+  "title": "Restrict editing to admins — read-only mode for all viewers",
+  "projectName": "Connect the Dots ICP",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "only change it to read only for viewers on the live version. I don't want just anyone changing anything or writing articles"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When a user is not logged in via Internet Identity, no Add, Edit, or Delete buttons are visible in any section.",
+        "When a user is logged in via Internet Identity, all Add, Edit, and Delete controls appear and function as before.",
+        "A login button (e.g., 'Admin Login') is visible to unauthenticated users so an admin can authenticate.",
+        "A logout button is visible to authenticated users.",
+        "Content (articles, spotlights, resources, wisdom quotes, X posts, homepage links, mission) remains fully visible to all visitors regardless of auth state.",
+        "No mutations (create, update, delete) are callable from the UI without authentication."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not change any backend data models, CRUD operations, or storage logic.",
+    "Do not alter any immutable frontend paths (useInternetIdentity.ts, useActor.ts, main.tsx, components/ui).",
+    "All existing visual design, layout, color palette, and tab navigation must remain unchanged.",
+    "The existing useInternetIdentity hook must be used as-is for auth state."
+  ],
+  "nonGoals": [
+    "Role-based access control beyond a simple authenticated/unauthenticated split.",
+    "Backend enforcement of read-only (the restriction is UI-layer only).",
+    "Any new content sections or features.",
+    "Changes to the data schema or migration logic."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

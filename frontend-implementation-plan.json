@@ -1,0 +1,66 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Restrict editing to admins — read-only mode for all viewers",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Implement an admin authentication gate using Internet Identity so only logged-in admins can access Add, Edit, or Delete controls, while unauthenticated visitors see content in read-only mode",
+      "acceptanceCriteria": [
+        "When a user is not logged in via Internet Identity, no Add, Edit, or Delete buttons are visible in any section.",
+        "When a user is logged in via Internet Identity, all Add, Edit, and Delete controls appear and function as before.",
+        "A login button (e.g., 'Admin Login') is visible to unauthenticated users so an admin can authenticate.",
+        "A logout button is visible to authenticated users.",
+        "Content (articles, spotlights, resources, wisdom quotes, X posts, homepage links, mission) remains fully visible to all visitors regardless of auth state.",
+        "No mutations (create, update, delete) are callable from the UI without authentication."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add an Admin Login/Logout button in the header area using the useInternetIdentity hook to display authentication state and provide login/logout actions for admin access"
+        },
+        {
+          "path": "frontend/src/components/LatestProgress.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Article button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/CybercrimeAwareness.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Article button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/EcosystemSpotlight.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Spotlight button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/InvestingWisdom.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Wisdom button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/TrustedResources.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Resource button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/XPosts.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add X Post button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/HomePageLinks.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Add Link button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
+        },
+        {
+          "path": "frontend/src/components/MissionPage.tsx",
+          "operation": "modify",
+          "description": "Conditionally render the Edit Mission button based on authentication state from useInternetIdentity hook, hiding the edit control when user is not authenticated"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "A content management platform with photo boxes, admin controls, editable resources, and a gallery tab. Viewers on the live version have read-only access — only admins can edit content or write articles.",
+  "architectural_notes": [
+    "Viewer permissions are read-only on the live version; only admins can edit content or write articles."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-an-admin-authentication-gate-using-internet-identity-only-a-logged-in-admin-authenticated-via-internet-identity-may-see-or-use-any-add-edit-or-delete-buttons-dialogs-across-all-sections-missionpage-latestprogress-ecosystemspotlight-cybercrimeawareness-investingwisdom-trustedresources-xposts-homepagelinks-unauthenticated-visitors-see-the-content-in-read-only-mode-with-no-mutation-controls-exposed",
+      "title": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [],
+  "gameProjectType": "none",
+  "projectName": "Connect the Dots ICP",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

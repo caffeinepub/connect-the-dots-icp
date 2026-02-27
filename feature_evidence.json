@@ -1,0 +1,32 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-an-admin-authentication-gate-using-internet-identity-only-a-logged-in-admin-authenticated-via-internet-identity-may-see-or-use-any-add-edit-or-delete-buttons-dialogs-across-all-sections-missionpage-latestprogress-ecosystemspotlight-cybercrimeawareness-investingwisdom-trustedresources-xposts-homepagelinks-unauthenticated-visitors-see-the-content-in-read-only-mode-with-no-mutation-controls-exposed",
+      "featureTitle": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/CybercrimeAwareness.tsx",
+        "frontend/src/components/EcosystemSpotlight.tsx",
+        "frontend/src/components/HomePageLinks.tsx",
+        "frontend/src/components/InvestingWisdom.tsx",
+        "frontend/src/components/LatestProgress.tsx",
+        "frontend/src/components/MissionPage.tsx",
+        "frontend/src/components/TrustedResources.tsx",
+        "frontend/src/components/XPosts.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
