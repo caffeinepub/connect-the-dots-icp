@@ -1,24 +1,52 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "A content management platform with photo boxes, admin controls, editable resources, and a gallery tab. Viewers on the live version have read-only access — only admins can edit content or write articles.",
-  "architectural_notes": [
-    "Viewer permissions are read-only on the live version; only admins can edit content or write articles."
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-implement-an-admin-authentication-gate-using-internet-identity-only-a-logged-in-admin-authenticated-via-internet-identity-may-see-or-use-any-add-edit-or-delete-buttons-dialogs-across-all-sections-missionpage-latestprogress-ecosystemspotlight-cybercrimeawareness-investingwisdom-trustedresources-xposts-homepagelinks-unauthenticated-visitors-see-the-content-in-read-only-mode-with-no-mutation-controls-exposed",
-      "title": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
+      "id": "feature-update-the-addspotlightdialog-component-to-require-a-header-photo-upload-the-image-upload-field-should-be-prominently-placed-at-the-top-of-the-dialog-form-marked-as-required-and-show-upload-progress-the-uploaded-image-must-be-submitted-with-the-new-spotlight-entry",
+      "title": "Update the AddSpotlightDialog component to require a header photo upload. The image upload field should be prominently placed at the top of the dialog form, marked as required, and show upload progress. The uploaded image must be submitted with the new spotlight entry.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-editspotlightdialog-component-so-admins-can-replace-the-header-photo-of-an-existing-spotlight-the-current-photo-should-be-previewed-in-the-dialog-and-a-new-photo-can-be-uploaded-to-replace-it",
+      "title": "Update the EditSpotlightDialog component so admins can replace the header photo of an existing spotlight. The current photo should be previewed in the dialog, and a new photo can be uploaded to replace it.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-ecosystemspotlight-display-component-so-each-spotlight-card-renders-the-header-photo-as-a-full-width-banner-image-at-the-top-of-the-card-before-the-title-and-content-if-a-spotlight-has-no-photo-show-a-styled-placeholder-fallback-area-the-photo-should-be-visually-prominent-and-consistent-across-all-spotlight-cards",
+      "title": "Update the EcosystemSpotlight display component so each spotlight card renders the header photo as a full-width banner image at the top of the card, before the title and content. If a spotlight has no photo, show a styled placeholder/fallback area. The photo should be visually prominent and consistent across all spotlight cards.",
+      "reqIds": [
+        "REQ-4"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "gameProjectType": "none",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add a header photo box for ecosystem spotlight so each spotlight starts with a photo",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Update the Spotlight data model in the backend to ensure an image/photo field is stored as part of each spotlight entry. The image should be stored as a blob (consistent with how other image fields are stored for Articles, XPosts, etc.). If the field already exists, confirm it is surfaced properly for required display.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    }
+  ],
   "projectName": "Connect the Dots ICP",
   "clarification_mode": "instant",
   "clarification_rounds": 0

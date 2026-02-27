@@ -46,7 +46,7 @@ export const Spotlight = IDL.Record({
   'content' : IDL.Text,
   'link' : IDL.Opt(IDL.Text),
   'timestamp' : Time,
-  'image' : IDL.Opt(ExternalBlob),
+  'image' : ExternalBlob,
 });
 export const Wisdom = IDL.Record({
   'id' : IDL.Text,
@@ -98,7 +98,7 @@ export const idlService = IDL.Service({
   'addHomePageLink' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
   'addResource' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'addSpotlight' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+      [IDL.Text, IDL.Text, ExternalBlob, IDL.Opt(IDL.Text)],
       [],
       [],
     ),
@@ -146,7 +146,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'updateSpotlight' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+      [IDL.Text, IDL.Text, IDL.Text, ExternalBlob, IDL.Opt(IDL.Text)],
       [IDL.Bool],
       [],
     ),
@@ -195,7 +195,7 @@ export const idlFactory = ({ IDL }) => {
     'content' : IDL.Text,
     'link' : IDL.Opt(IDL.Text),
     'timestamp' : Time,
-    'image' : IDL.Opt(ExternalBlob),
+    'image' : ExternalBlob,
   });
   const Wisdom = IDL.Record({
     'id' : IDL.Text,
@@ -251,7 +251,7 @@ export const idlFactory = ({ IDL }) => {
     'addHomePageLink' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [], []),
     'addResource' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'addSpotlight' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
+        [IDL.Text, IDL.Text, ExternalBlob, IDL.Opt(IDL.Text)],
         [],
         [],
       ),
@@ -299,13 +299,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'updateSpotlight' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Opt(ExternalBlob),
-          IDL.Opt(IDL.Text),
-        ],
+        [IDL.Text, IDL.Text, IDL.Text, ExternalBlob, IDL.Opt(IDL.Text)],
         [IDL.Bool],
         [],
       ),

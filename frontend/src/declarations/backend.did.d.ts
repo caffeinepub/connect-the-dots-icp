@@ -41,7 +41,7 @@ export interface Spotlight {
   'content' : string,
   'link' : [] | [string],
   'timestamp' : Time,
-  'image' : [] | [ExternalBlob],
+  'image' : ExternalBlob,
 }
 export type Time = bigint;
 export interface Wisdom {
@@ -91,7 +91,7 @@ export interface _SERVICE {
   'addHomePageLink' : ActorMethod<[string, string, ExternalBlob], undefined>,
   'addResource' : ActorMethod<[string, string, string], undefined>,
   'addSpotlight' : ActorMethod<
-    [string, string, [] | [ExternalBlob], [] | [string]],
+    [string, string, ExternalBlob, [] | [string]],
     undefined
   >,
   'addWisdom' : ActorMethod<[string, string], undefined>,
@@ -130,7 +130,7 @@ export interface _SERVICE {
   >,
   'updateResource' : ActorMethod<[string, string, string, string], boolean>,
   'updateSpotlight' : ActorMethod<
-    [string, string, string, [] | [ExternalBlob], [] | [string]],
+    [string, string, string, ExternalBlob, [] | [string]],
     boolean
   >,
   'updateWisdom' : ActorMethod<[string, string, string], boolean>,

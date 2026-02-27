@@ -178,7 +178,7 @@ export function useAddSpotlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ title, content, image, link }: { title: string; content: string; image: ExternalBlob | null; link: string | null }) => {
+    mutationFn: async ({ title, content, image, link }: { title: string; content: string; image: ExternalBlob; link: string | null }) => {
       if (!actor) throw new Error('Backend connection not ready');
       return actor.addSpotlight(title, content, image, link);
     },
@@ -197,7 +197,7 @@ export function useUpdateSpotlight() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, title, content, image, link }: { id: string; title: string; content: string; image: ExternalBlob | null; link: string | null }) => {
+    mutationFn: async ({ id, title, content, image, link }: { id: string; title: string; content: string; image: ExternalBlob; link: string | null }) => {
       if (!actor) throw new Error('Backend connection not ready');
       return actor.updateSpotlight(id, title, content, image, link);
     },

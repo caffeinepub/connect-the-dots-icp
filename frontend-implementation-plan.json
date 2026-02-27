@@ -1,64 +1,55 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Restrict editing to admins — read-only mode for all viewers",
+  "title": "Add header photo to Ecosystem Spotlight entries",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Implement an admin authentication gate using Internet Identity so only logged-in admins can access Add, Edit, or Delete controls, while unauthenticated visitors see content in read-only mode",
+      "id": "REQ-2",
+      "summary": "Update AddSpotlightDialog to require a header photo upload field at the top of the form",
       "acceptanceCriteria": [
-        "When a user is not logged in via Internet Identity, no Add, Edit, or Delete buttons are visible in any section.",
-        "When a user is logged in via Internet Identity, all Add, Edit, and Delete controls appear and function as before.",
-        "A login button (e.g., 'Admin Login') is visible to unauthenticated users so an admin can authenticate.",
-        "A logout button is visible to authenticated users.",
-        "Content (articles, spotlights, resources, wisdom quotes, X posts, homepage links, mission) remains fully visible to all visitors regardless of auth state.",
-        "No mutations (create, update, delete) are callable from the UI without authentication."
+        "The Add Spotlight dialog has a photo upload field at the top of the form.",
+        "Submitting a new spotlight without a photo shows a validation error.",
+        "Upload progress is shown while the photo is being uploaded.",
+        "The photo is included when the spotlight entry is created."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/AddSpotlightDialog.tsx",
           "operation": "modify",
-          "description": "Add an Admin Login/Logout button in the header area using the useInternetIdentity hook to display authentication state and provide login/logout actions for admin access"
-        },
+          "description": "Make the image upload field required and move it to the top of the form. Add validation to prevent submission without a photo. The blob-storage component provides ExternalBlob.fromBytes() for handling uploads and withUploadProgress() for tracking upload progress. Verify the component's usage instructions before implementing. Update the form state to track the image as required, show clear validation feedback if missing, and ensure the ExternalBlob is passed to the addSpotlight backend method."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Update EditSpotlightDialog to allow admins to replace the header photo with a preview of the current photo",
+      "acceptanceCriteria": [
+        "The Edit Spotlight dialog shows a preview of the current header photo.",
+        "Admins can upload a replacement photo with progress feedback.",
+        "If no new photo is uploaded, the existing photo is preserved on save."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/LatestProgress.tsx",
+          "path": "frontend/src/components/EditSpotlightDialog.tsx",
           "operation": "modify",
-          "description": "Conditionally render the Add Article button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/CybercrimeAwareness.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Add Article button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
+          "description": "Add a photo preview section that displays the current spotlight image using getDirectURL() from the ExternalBlob. Allow admins to upload a replacement photo using ExternalBlob.fromBytes() with upload progress tracking via withUploadProgress(). Verify the blob-storage component's usage instructions before implementing. If no new photo is selected, preserve the existing image field when calling updateSpotlight. Show the current image thumbnail and provide a file input for replacement."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Update EcosystemSpotlight display to render header photos as full-width banner images at the top of each spotlight card",
+      "acceptanceCriteria": [
+        "Every spotlight card displays its header photo as a full-width banner at the top of the card.",
+        "The photo is displayed before the title and content.",
+        "Cards without a photo show a styled placeholder area (e.g., a gradient or icon).",
+        "The photo layout is visually consistent across all spotlight cards."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/EcosystemSpotlight.tsx",
           "operation": "modify",
-          "description": "Conditionally render the Add Spotlight button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/InvestingWisdom.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Add Wisdom button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/TrustedResources.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Add Resource button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/XPosts.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Add X Post button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/HomePageLinks.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Add Link button and Edit/Delete actions based on authentication state from useInternetIdentity hook, hiding all mutation controls when user is not authenticated"
-        },
-        {
-          "path": "frontend/src/components/MissionPage.tsx",
-          "operation": "modify",
-          "description": "Conditionally render the Edit Mission button based on authentication state from useInternetIdentity hook, hiding the edit control when user is not authenticated"
+          "description": "Add a full-width banner image section at the top of each spotlight card using the spotlight.image.getDirectURL() method from the blob-storage component. Verify the component's usage instructions before implementing. Position the image before the title and content. For spotlights without an image (graceful degradation), render a styled placeholder div with a gradient or icon. Ensure consistent aspect ratio and styling across all cards. Use Tailwind classes for responsive image sizing and rounded corners to match the card design."
         }
       ]
     }

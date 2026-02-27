@@ -51,7 +51,7 @@ export interface Spotlight {
     content: string;
     link?: string;
     timestamp: Time;
-    image?: ExternalBlob;
+    image: ExternalBlob;
 }
 export interface XPost {
     id: string;
@@ -64,7 +64,7 @@ export interface backendInterface {
     addCybercrimeArticle(title: string, url: string, thumbnail: ExternalBlob): Promise<void>;
     addHomePageLink(title: string, url: string, thumbnail: ExternalBlob): Promise<void>;
     addResource(name: string, description: string, url: string): Promise<void>;
-    addSpotlight(title: string, content: string, image: ExternalBlob | null, link: string | null): Promise<void>;
+    addSpotlight(title: string, content: string, image: ExternalBlob, link: string | null): Promise<void>;
     addWisdom(quote: string, author: string): Promise<void>;
     addXPost(description: string, image: ExternalBlob): Promise<void>;
     deleteArticle(id: string): Promise<boolean>;
@@ -88,7 +88,7 @@ export interface backendInterface {
     updateHomePageLink(id: string, title: string, url: string, thumbnail: ExternalBlob): Promise<boolean>;
     updateMissionContent(title: string, description: string, images: Array<ExternalBlob>): Promise<void>;
     updateResource(id: string, name: string, description: string, url: string): Promise<boolean>;
-    updateSpotlight(id: string, title: string, content: string, image: ExternalBlob | null, link: string | null): Promise<boolean>;
+    updateSpotlight(id: string, title: string, content: string, image: ExternalBlob, link: string | null): Promise<boolean>;
     updateWisdom(id: string, quote: string, author: string): Promise<boolean>;
     updateXPost(id: string, description: string, image: ExternalBlob): Promise<boolean>;
 }

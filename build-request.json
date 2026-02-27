@@ -1,42 +1,95 @@
 {
   "kind": "build_request",
-  "title": "Restrict editing to admins — read-only mode for all viewers",
+  "title": "Add header photo to Ecosystem Spotlight entries",
   "projectName": "Connect the Dots ICP",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
-      "target": "frontend",
+      "text": "Update the Spotlight data model in the backend to ensure an image/photo field is stored as part of each spotlight entry. The image should be stored as a blob (consistent with how other image fields are stored for Articles, XPosts, etc.). If the field already exists, confirm it is surfaced properly for required display.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "only change it to read only for viewers on the live version. I don't want just anyone changing anything or writing articles"
+          "add a header photo box for ecosystem spotlight",
+          "each spotlight starts out with a photo"
         ]
       },
       "acceptanceCriteria": [
-        "When a user is not logged in via Internet Identity, no Add, Edit, or Delete buttons are visible in any section.",
-        "When a user is logged in via Internet Identity, all Add, Edit, and Delete controls appear and function as before.",
-        "A login button (e.g., 'Admin Login') is visible to unauthenticated users so an admin can authenticate.",
-        "A logout button is visible to authenticated users.",
-        "Content (articles, spotlights, resources, wisdom quotes, X posts, homepage links, mission) remains fully visible to all visitors regardless of auth state.",
-        "No mutations (create, update, delete) are callable from the UI without authentication."
+        "The Spotlight type includes an image blob field (or optional blob field) in the backend actor.",
+        "Existing spotlight entries without a photo degrade gracefully (e.g., no photo shown)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the AddSpotlightDialog component to require a header photo upload. The image upload field should be prominently placed at the top of the dialog form, marked as required, and show upload progress. The uploaded image must be submitted with the new spotlight entry.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "each spotlight starts out with a photo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Add Spotlight dialog has a photo upload field at the top of the form.",
+        "Submitting a new spotlight without a photo shows a validation error.",
+        "Upload progress is shown while the photo is being uploaded.",
+        "The photo is included when the spotlight entry is created."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Update the EditSpotlightDialog component so admins can replace the header photo of an existing spotlight. The current photo should be previewed in the dialog, and a new photo can be uploaded to replace it.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "each spotlight starts out with a photo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Edit Spotlight dialog shows a preview of the current header photo.",
+        "Admins can upload a replacement photo with progress feedback.",
+        "If no new photo is uploaded, the existing photo is preserved on save."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update the EcosystemSpotlight display component so each spotlight card renders the header photo as a full-width banner image at the top of the card, before the title and content. If a spotlight has no photo, show a styled placeholder/fallback area. The photo should be visually prominent and consistent across all spotlight cards.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add a header photo box for ecosystem spotlight",
+          "each spotlight starts out with a photo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Every spotlight card displays its header photo as a full-width banner at the top of the card.",
+        "The photo is displayed before the title and content.",
+        "Cards without a photo show a styled placeholder area (e.g., a gradient or icon).",
+        "The photo layout is visually consistent across all spotlight cards."
       ]
     }
   ],
   "constraints": [
-    "Do not change any backend data models, CRUD operations, or storage logic.",
-    "Do not alter any immutable frontend paths (useInternetIdentity.ts, useActor.ts, main.tsx, components/ui).",
-    "All existing visual design, layout, color palette, and tab navigation must remain unchanged.",
-    "The existing useInternetIdentity hook must be used as-is for auth state."
+    "Do not modify files under frontend/src/hooks/ (immutable paths).",
+    "Do not modify files under frontend/src/components/ui/ (immutable paths).",
+    "Keep all backend logic in the single main actor (backend/main.mo).",
+    "Image storage must use the existing blob storage approach already used for other image fields."
   ],
   "nonGoals": [
-    "Role-based access control beyond a simple authenticated/unauthenticated split.",
-    "Backend enforcement of read-only (the restriction is UI-layer only).",
-    "Any new content sections or features.",
-    "Changes to the data schema or migration logic."
+    "Adding multiple photos per spotlight (only one header photo per entry).",
+    "Adding photo support to any section other than Ecosystem Spotlight.",
+    "Changing the overall layout or tab navigation of the app."
   ],
   "imageRequirements": {
     "required": [],

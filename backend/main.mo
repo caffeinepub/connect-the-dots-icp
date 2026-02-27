@@ -5,9 +5,9 @@ import Iter "mo:core/Iter";
 import Time "mo:core/Time";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -30,7 +30,7 @@ actor {
     id : Text;
     title : Text;
     content : Text;
-    image : ?Storage.ExternalBlob;
+    image : Storage.ExternalBlob;
     timestamp : Time.Time;
     link : ?Text;
   };
@@ -171,7 +171,7 @@ actor {
     };
   };
 
-  public shared ({ caller }) func addSpotlight(title : Text, content : Text, image : ?Storage.ExternalBlob, link : ?Text) : async () {
+  public shared ({ caller }) func addSpotlight(title : Text, content : Text, image : Storage.ExternalBlob, link : ?Text) : async () {
     let id = Time.now().toText();
     let spotlight : Spotlight = {
       id;
@@ -190,7 +190,7 @@ actor {
     array.reverse().map(func((_, s)) { s });
   };
 
-  public shared ({ caller }) func updateSpotlight(id : Text, title : Text, content : Text, image : ?Storage.ExternalBlob, link : ?Text) : async Bool {
+  public shared ({ caller }) func updateSpotlight(id : Text, title : Text, content : Text, image : Storage.ExternalBlob, link : ?Text) : async Bool {
     switch (spotlights.get(id)) {
       case (null) { false };
       case (?oldSpotlight) {

@@ -2,18 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-implement-an-admin-authentication-gate-using-internet-identity-only-a-logged-in-admin-authenticated-via-internet-identity-may-see-or-use-any-add-edit-or-delete-buttons-dialogs-across-all-sections-missionpage-latestprogress-ecosystemspotlight-cybercrimeawareness-investingwisdom-trustedresources-xposts-homepagelinks-unauthenticated-visitors-see-the-content-in-read-only-mode-with-no-mutation-controls-exposed",
-      "featureTitle": "Implement an admin authentication gate using Internet Identity: only a logged-in admin (authenticated via Internet Identity) may see or use any Add, Edit, or Delete buttons/dialogs across all sections (MissionPage, LatestProgress, EcosystemSpotlight, CybercrimeAwareness, InvestingWisdom, TrustedResources, XPosts, HomePageLinks). Unauthenticated visitors see the content in read-only mode with no mutation controls exposed.",
+      "featureId": "feature-update-the-addspotlightdialog-component-to-require-a-header-photo-upload-the-image-upload-field-should-be-prominently-placed-at-the-top-of-the-dialog-form-marked-as-required-and-show-upload-progress-the-uploaded-image-must-be-submitted-with-the-new-spotlight-entry",
+      "featureTitle": "Update the AddSpotlightDialog component to require a header photo upload. The image upload field should be prominently placed at the top of the dialog form, marked as required, and show upload progress. The uploaded image must be submitted with the new spotlight entry.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/CybercrimeAwareness.tsx",
-        "frontend/src/components/EcosystemSpotlight.tsx",
-        "frontend/src/components/HomePageLinks.tsx",
-        "frontend/src/components/InvestingWisdom.tsx",
-        "frontend/src/components/LatestProgress.tsx",
-        "frontend/src/components/MissionPage.tsx",
-        "frontend/src/components/TrustedResources.tsx",
-        "frontend/src/components/XPosts.tsx"
+        "frontend/src/components/AddSpotlightDialog.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -24,7 +16,45 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-editspotlightdialog-component-so-admins-can-replace-the-header-photo-of-an-existing-spotlight-the-current-photo-should-be-previewed-in-the-dialog-and-a-new-photo-can-be-uploaded-to-replace-it",
+      "featureTitle": "Update the EditSpotlightDialog component so admins can replace the header photo of an existing spotlight. The current photo should be previewed in the dialog, and a new photo can be uploaded to replace it.",
+      "files": [
+        "frontend/src/components/EditSpotlightDialog.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-ecosystemspotlight-display-component-so-each-spotlight-card-renders-the-header-photo-as-a-full-width-banner-image-at-the-top-of-the-card-before-the-title-and-content-if-a-spotlight-has-no-photo-show-a-styled-placeholder-fallback-area-the-photo-should-be-visually-prominent-and-consistent-across-all-spotlight-cards",
+      "featureTitle": "Update the EcosystemSpotlight display component so each spotlight card renders the header photo as a full-width banner image at the top of the card, before the title and content. If a spotlight has no photo, show a styled placeholder/fallback area. The photo should be visually prominent and consistent across all spotlight cards.",
+      "files": [
+        "frontend/src/components/EcosystemSpotlight.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }

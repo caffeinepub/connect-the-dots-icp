@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ImagePlus } from 'lucide-react';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
 import type { Spotlight } from '../backend';
@@ -28,6 +28,7 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
   const [content, setContent] = useState('');
   const [link, setLink] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const updateSpotlight = useUpdateSpotlight();
 
@@ -37,9 +38,21 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
       setContent(spotlight.content);
       setLink(spotlight.link || '');
       setImageFile(null);
+      setImagePreview(null);
       setUploadProgress(0);
     }
   }, [open, spotlight]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
+    } else {
+      setImagePreview(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,8 +63,8 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
     }
 
     try {
-      let image = spotlight.image || null;
-      
+      let image = spotlight.image;
+
       if (imageFile) {
         const arrayBuffer = await imageFile.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
@@ -60,19 +73,20 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
         });
       }
 
-      await updateSpotlight.mutateAsync({ 
-        id: spotlight.id, 
-        title, 
-        content, 
+      await updateSpotlight.mutateAsync({
+        id: spotlight.id,
+        title,
+        content,
         image,
-        link: link || null
+        link: link || null,
       });
-      
+
       toast.success('Spotlight updated successfully!');
       setTitle('');
       setContent('');
       setLink('');
       setImageFile(null);
+      setImagePreview(null);
       setUploadProgress(0);
       onOpenChange(false);
     } catch (error) {
@@ -81,9 +95,12 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
     }
   };
 
+  // Determine which image URL to show: new preview or existing
+  const currentImageUrl = imagePreview || (spotlight?.image ? spotlight.image.getDirectURL() : null);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1a0a2e] border-white/10 text-foreground">
+      <DialogContent className="bg-[#1a0a2e] border-white/10 text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
             Edit Ecosystem Spotlight
@@ -93,6 +110,52 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Header Photo */}
+          <div className="space-y-2">
+            <Label htmlFor="image" className="text-white">Header Photo</Label>
+            {currentImageUrl ? (
+              <div className="relative w-full rounded-lg overflow-hidden border border-white/10 group">
+                <img
+                  src={currentImageUrl}
+                  alt="Header preview"
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <label
+                    htmlFor="image"
+                    className="cursor-pointer px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
+                  >
+                    Replace Photo
+                  </label>
+                </div>
+                {imageFile && (
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/70 rounded px-2 py-1 text-xs text-white/80 truncate">
+                    New: {imageFile.name}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <label
+                htmlFor="image"
+                className="flex flex-col items-center justify-center w-full h-40 rounded-lg border-2 border-dashed border-white/20 bg-black/20 hover:bg-black/30 hover:border-purple-500/50 cursor-pointer transition-colors"
+              >
+                <ImagePlus className="w-8 h-8 mb-2 text-white/40" />
+                <span className="text-sm text-white/50">Click to upload header photo</span>
+                <span className="text-xs text-white/30 mt-1">PNG, JPG, GIF up to 10MB</span>
+              </label>
+            )}
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            {!imageFile && currentImageUrl && (
+              <p className="text-xs text-white/50">Hover over the image to replace it. Leave unchanged to keep the current photo.</p>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="title" className="text-white">Title</Label>
             <Input
@@ -124,23 +187,11 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
               className="bg-black/40 border-white/10 text-white placeholder:text-white/50"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="image" className="text-white">Image (Optional - leave empty to keep current)</Label>
-            <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="bg-black/40 border-white/10 text-white file:text-white"
-            />
-            {imageFile && (
-              <p className="text-sm text-white/70">Selected: {imageFile.name}</p>
-            )}
-          </div>
+
           {uploadProgress > 0 && uploadProgress < 100 && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-white">
-                <span>Uploading...</span>
+                <span>Uploading photo...</span>
                 <span>{uploadProgress}%</span>
               </div>
               <div className="h-2 bg-black/40 rounded-full overflow-hidden">
@@ -151,6 +202,7 @@ export function EditSpotlightDialog({ open, onOpenChange, spotlight }: EditSpotl
               </div>
             </div>
           )}
+
           <DialogFooter>
             <Button
               type="button"
